@@ -156,7 +156,7 @@ CreateThread(function()
                     checked = true
                 end
 
-                local label = CreateVarString(10, 'LITERAL_STRING', 'Door Status: '..doorStatus)
+                local label = CreateVarString(10, 'LITERAL_STRING', house.name..': '..doorStatus)
 
                 PromptSetActiveGroupThisFrame(doorLockPrompt, label)
 
