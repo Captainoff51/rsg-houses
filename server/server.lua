@@ -87,6 +87,8 @@ RegisterServerEvent('rsg-houses:server:buyhouse', function(data)
     Player.Functions.RemoveMoney('cash', data.price)
 
     RSGCore.Functions.Notify(src, 'House purchased!', 'success')
+
+    TriggerClientEvent('rsg-houses:client:BlipsOnSpawn', src, data.blip)
 end)
 
 -- sell house
@@ -101,6 +103,8 @@ RegisterServerEvent('rsg-houses:server:sellhouse', function(data)
     Player.Functions.AddMoney('cash', data.price)
 
     RSGCore.Functions.Notify(src, 'House sold!', 'success')
+
+    TriggerClientEvent('rsg-houses:client:BlipsOnSpawn', src, data.blip)
 end)
 
 -- add house credit

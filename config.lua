@@ -10,6 +10,7 @@ Config.CreditWarning    = 5 -- 5 x Config.LandTaxPerCycle amount : warning will 
 Config.SellBack         = 0.8 -- example: 0.5 = 50% of the buy price / 0.8 = 80% of the buy price
 Config.StorageMaxWeight = 4000000
 Config.StorageMaxSlots  = 50
+Config.OwnedHouseBlips  = true -- when set to true, only the owned house will show the blip
 
 -- blip settings
 Config.Blip =

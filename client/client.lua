@@ -4,6 +4,9 @@ local doorLockPrompt = GetRandomIntInRange(0, 0xffffff)
 local lockPrompt = nil
 local DoorID = nil
 local HouseID = nil
+local myhouse = nil
+local HouseBlip = nil
+local blipchecked = false
 local checked = false
 local doorStatus = '~e~Locked~q~'
 local createdEntries = {}
@@ -90,20 +93,74 @@ CreateThread(function()
 end)
 
 -- House Blips
-CreateThread(function()
+AddEventHandler('rsg-houses:client:CheckBlip', function()
+    RSGCore.Functions.TriggerCallback('rsg-houses:server:GetOwnedHouseInfo', function(result)
+        local houseid = result[1].houseid
+
+        myhouse = houseid
+    end)
+
+    while not myhouse do
+        Wait(1)
+    end
+
     for i = 1, #Config.Houses do
         local house = Config.Houses[i]
 
-        if house.showblip then
-            local HouseBlip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, house.blipcoords)
+        if Config.OwnedHouseBlips and house.houseid == myhouse then
+            HouseBlip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, house.blipcoords)
 
             SetBlipSprite(HouseBlip, `blip_proc_home`, true)
-            SetBlipScale(HouseBlip, 0.2)
+            SetBlipScale(HouseBlip, 0.1)
+            Citizen.InvokeNative(0x9CB1A1623062F402, HouseBlip, 'Home Sweet Home')
+
+            createdEntries[#createdEntries + 1] = {type = "BLIP", handle = HouseBlip}
+
+            break
+        end
+
+        if not Config.OwnedHouseBlips and house.showblip then
+            HouseBlip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, house.blipcoords)
+
+            SetBlipSprite(HouseBlip, `blip_proc_home`, true)
+            SetBlipScale(HouseBlip, 0.1)
             Citizen.InvokeNative(0x9CB1A1623062F402, HouseBlip, house.name)
 
             createdEntries[#createdEntries + 1] = {type = "BLIP", handle = HouseBlip}
         end
     end
+end)
+
+-- Check Owned House Blip on Spawn
+RegisterNetEvent('rsg-houses:client:BlipsOnSpawn')
+AddEventHandler('rsg-houses:client:BlipsOnSpawn', function(blip)
+    if blip and blip > 0 then
+        RemoveBlip(blip)
+    end
+
+    RSGCore.Functions.TriggerCallback('rsg-houses:server:GetOwnedHouseInfo', function(result)
+        local houseid = result[1].houseid
+
+        myhouse = houseid
+        blipchecked = false
+
+        TriggerEvent('rsg-houses:client:BlipLoop')
+    end)
+end)
+
+-- Get Owned House Blip
+AddEventHandler('rsg-houses:client:BlipLoop', function()
+    blipchecked = false
+
+    CreateThread(function()
+        while not blipchecked do
+            TriggerEvent('rsg-houses:client:CheckBlip')
+
+            blipchecked = true
+
+            Wait(10000)
+        end
+    end)
 end)
 
 -- Get Door State from Database and Set
@@ -274,7 +331,8 @@ RegisterNetEvent('rsg-houses:client:buymenu', function(data)
                         args =
                         {
                             house = houseid,
-                            price = price
+                            price = price,
+                            blip = HouseBlip
                         },
                         isServer = true
                     }
@@ -317,7 +375,8 @@ RegisterNetEvent('rsg-houses:client:sellmenu', function(data)
                         args =
                         {
                             house = houseid,
-                            price = sellprice
+                            price = sellprice,
+                            blip = HouseBlip
                         },
                         isServer = true
                     }
