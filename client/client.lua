@@ -615,7 +615,7 @@ RegisterNetEvent('rsg-houses:client:addcredit', function(data)
                 print(data.houseid)
             end
             local newcredit = (data.credit + dialog.addcredit)
-            TriggerServerEvent('rsg-houses:server:addcredit', newcredit, dialog.addcredit, data.houseid)
+            TriggerServerEvent('rsg-houses:server:addcredit', tonumber(newcredit), tonumber(dialog.addcredit), data.houseid)
         end
     end
 end)
