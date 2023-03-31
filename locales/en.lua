@@ -1,6 +1,6 @@
 local Translations = {
     error = {
-        error_var = 'Example Text',
+        not_enough_cash = "you don\'t have enought cash for that!",
     },
     success = {
         success_var = 'Example Text',

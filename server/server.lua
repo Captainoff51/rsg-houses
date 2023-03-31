@@ -111,14 +111,18 @@ end)
 RegisterNetEvent('rsg-houses:server:addcredit', function(newcredit, removemoney, houseid)
     local src = source
     local Player = RSGCore.Functions.GetPlayer(src)
+    local cashBalance = Player.PlayerData.money["cash"]
+    if cashBalance >= removemoney then
+        Player.Functions.RemoveMoney("cash", removemoney, "land-tax-credit")
 
-    Player.Functions.RemoveMoney("cash", removemoney, "land-tax-credit")
+        MySQL.update('UPDATE player_houses SET credit = ? WHERE houseid = ?', {newcredit, houseid})
 
-    MySQL.update('UPDATE player_houses SET credit = ? WHERE houseid = ?', {newcredit, houseid})
-
-    RSGCore.Functions.Notify(src, 'Land Tax credit added for '..houseid, 'success')
-    Wait(5000)
-    RSGCore.Functions.Notify(src, 'Your Land Tax credit is now $'..newcredit, 'primary')
+        RSGCore.Functions.Notify(src, 'Land Tax credit added for '..houseid, 'success')
+        Wait(5000)
+        RSGCore.Functions.Notify(src, 'Your Land Tax credit is now $'..newcredit, 'primary')
+    else
+        RSGCore.Functions.Notify(src,  Lang:t('error.not_enough_cash'), 'error')
+    end
 end)
 
 --------------------------------------------------------------------------------------------------
