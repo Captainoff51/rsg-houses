@@ -11,6 +11,7 @@ Config.SellBack         = 0.8 -- example: 0.5 = 50% of the buy price / 0.8 = 80%
 Config.StorageMaxWeight = 4000000
 Config.StorageMaxSlots  = 50
 Config.OwnedHouseBlips  = true -- when set to true, only the owned house will show the blip
+Config.PurgeStorage     = false -- purge house inventory when the house is taken back by not paying taxes (disabled by default)
 
 -- blip settings
 Config.Blip =

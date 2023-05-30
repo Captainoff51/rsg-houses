@@ -231,6 +231,10 @@ BillingInterval = function()
 
             MySQL.update('DELETE FROM player_housekeys WHERE houseid = ?', {row.houseid})
 
+            if Config.PurgeStorage then
+                MySQL.update('DELETE FROM stashitems WHERE stash = ?', {row.houseid})
+            end
+
             TriggerEvent('rsg-log:server:CreateLog', 'estateagent', 'House Lost', 'red', row.fullname..' house '..row.houseid..' has been lost!')
         end
 
