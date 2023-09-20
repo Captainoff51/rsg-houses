@@ -30,5 +30,5 @@ dependencies
     'rsg-menu',
     'rsg-input',
     'rsg-npcs',
-    'rsg-management'
+    'rsg-bossmenu'
 }
