@@ -107,6 +107,7 @@ Unfinished work, if you want you can collaborate to make it much better..
 
 # Version oficial thanks
 this is a reconverted work from RexShackGaming, by me.
+https://github.com/Rexshack-RedM/rsg-houses
 
 # By
 https://github.com/Sadicius
