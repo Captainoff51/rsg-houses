@@ -1,9 +1,9 @@
-# RexshackGaming
-- discord : https://discord.gg/s5uSk56B65
-- github : https://github.com/Rexshack-RedM
+# WARNING
+Unfinished work, if you want you can collaborate to make it much better..
 
 # Dependancies
 - rsg-core
+- ox_lib
 - rsg-menu
 - rsg-input
 - rsg-npcs
@@ -102,4 +102,15 @@
 ```
 
 # Starting the resource
+- Not finish reconversion all ox_lib
 - add the following to your server.cfg file : ensure rsg-houses
+
+# Version oficial thanks
+this is a reconverted work from RexShackGaming, by me.
+
+# By
+https://github.com/Sadicius
+
+# Credits
+- RexShack / RexShack#3041 (for the original)
+- Sadicius / Sadicius#1150 / https://linktr.ee/sadicius
