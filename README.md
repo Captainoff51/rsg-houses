@@ -1,6 +1,5 @@
 # RexshackGaming
-- discord : https://discord.gg/eW3ADkf4Af
-- youtube : https://www.youtube.com/channel/UCikEgGfXO-HCPxV5rYHEVbA
+- discord : https://discord.gg/s5uSk56B65
 - github : https://github.com/Rexshack-RedM
 
 # Dependancies
@@ -8,7 +7,7 @@
 - rsg-menu
 - rsg-input
 - rsg-npcs
-- rsg-management
+- rsg-bossmenu
 
 # Installation
 - ensure that the dependancies are added and started

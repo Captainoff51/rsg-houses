@@ -60,14 +60,14 @@ RegisterServerEvent('rsg-houses:server:buyhouse', function(data)
     local housecount = MySQL.prepare.await('SELECT COUNT(*) FROM player_houses WHERE citizenid = ?', {citizenid})
 
     if housecount >= 1 then
-        RSGCore.Functions.Notify(src, 'You already have a house!', 'error')
+        RSGCore.Functions.Notify(src, Lang:t('lang_52'), 'error')
         return
     end
 
-    if (Player.PlayerData.money.cash < data.price) then
-        RSGCore.Functions.Notify(src, 'You don\'t have enough cash!', 'error')
-        return
-    end
+    --if (Player.PlayerData.money.cash < data.price) then
+    --    RSGCore.Functions.Notify(src, 'You don\'t have enough cash!', 'error')
+    --    return
+    --end
 
     MySQL.update('UPDATE player_houses SET citizenid = ?, fullname = ?, owned = ?, credit = ? WHERE houseid = ?',
     {
@@ -84,9 +84,9 @@ RegisterServerEvent('rsg-houses:server:buyhouse', function(data)
         ['@houseid']    = data.house
     })
 
-    Player.Functions.RemoveMoney('cash', data.price)
+    Player.Functions.RemoveItem('cash', data.price)
 
-    RSGCore.Functions.Notify(src, 'House purchased!', 'success')
+    RSGCore.Functions.Notify(src, Lang:t('lang_53'), 'success')
 
     TriggerClientEvent('rsg-houses:client:BlipsOnSpawn', src, data.blip)
 end)
@@ -100,31 +100,91 @@ RegisterServerEvent('rsg-houses:server:sellhouse', function(data)
 
     MySQL.update('DELETE FROM player_housekeys WHERE houseid = ?', {data.house})
 
-    Player.Functions.AddMoney('cash', data.price)
+    Player.Functions.AddItem('cash', data.price)
 
-    RSGCore.Functions.Notify(src, 'House sold!', 'success')
+    RSGCore.Functions.Notify(src, Lang:t('lang_54'), 'success')
 
     TriggerClientEvent('rsg-houses:client:BlipsOnSpawn', src, data.blip)
 end)
+-----------------------------
+-- NEW parte TEST NOT FINISH
+-----------------------------
+-- 
+--[[ RSGCore.Functions.CreateCallback('rsg-houses:server:houseshopS', function(source, cb, currenthouseshop)
+    MySQL.query('SELECT * FROM player_houses WHERE houseid = ?', {currenthouseshop}, function(result)
+        if result[1] then
+            cb(result)
+        else
+            cb(nil)
+        end
+    end)
+end)
+
+RegisterServerEvent('rsg-houses:server:houseshopWithdraw')
+AddEventHandler('rsg-houses:server:houseshopWithdraw', function(location, smoney)
+    local src = source
+    local Player = RSGCore.Functions.GetPlayer(src)
+    local Playercid = Player.PlayerData.citizenid
+    
+    MySQL.query('SELECT * FROM player_houses WHERE houseid = ?',{location} , function(result)
+        if result[1] ~= nil then
+            if result[1].money >= tonumber(smoney) then
+                local nmoney = result[1].money - smoney
+                MySQL.update('UPDATE player_houses SET money = ? WHERE houseid = ?',{nmoney, location})
+                Player.Functions.AddItem('cash', smoney)
+            else
+                --Notif
+            end
+        end
+    end)
+end) ]]
+-----------------------
 
 -- add house credit
 RegisterNetEvent('rsg-houses:server:addcredit', function(newcredit, removemoney, houseid)
     local src = source
     local Player = RSGCore.Functions.GetPlayer(src)
-    local cashBalance = Player.PlayerData.money["cash"]
-    if cashBalance >= removemoney then
-        Player.Functions.RemoveMoney("cash", removemoney, "land-tax-credit")
+    --local cashBalance = Player.PlayerData.money["cash"]
+    --if cashBalance >= removemoney then
+    local cashItem = Player.Functions.GetItemByName("cash")
+    if cashItem and cashItem.amount >= removemoney then
+        Player.Functions.RemoveItem("cash", removemoney, "land-tax-credit")
 
         MySQL.update('UPDATE player_houses SET credit = ? WHERE houseid = ?', {newcredit, houseid})
 
-        RSGCore.Functions.Notify(src, 'Land Tax credit added for '..houseid, 'success')
-        Wait(5000)
-        RSGCore.Functions.Notify(src, 'Your Land Tax credit is now $'..newcredit, 'primary')
+        RSGCore.Functions.Notify(src, Lang:t('lang_55')..houseid, 'success')
+        Wait(3000)
+        RSGCore.Functions.Notify(src, Lang:t('lang_56')..newcredit, 'primary')
     else
-        RSGCore.Functions.Notify(src,  Lang:t('error.not_enough_cash'), 'error')
+        RSGCore.Functions.Notify(src,  Lang:t('lang_57'), 'error')
     end
 end)
 
+-- remove house credit
+RegisterNetEvent('rsg-houses:server:removecredit', function(newcredit, removemoney, houseid)
+    local src = source
+    local Player = RSGCore.Functions.GetPlayer(src)
+    local cashItem = Player.Functions.GetItemByName("cash")
+
+    if cashItem and cashItem.amount >= removemoney then
+        local updatedCredit = newcredit - removemoney
+
+        if updatedCredit < 0 then
+            RSGCore.Functions.Notify(src, Lang:t('lang_58'), 'error')
+            return
+        end
+
+        Player.Functions.AddItem("cash", removemoney, "land-tax-credit")
+
+        MySQL.update('UPDATE player_houses SET credit = ? WHERE houseid = ?', {updatedCredit, houseid})
+
+        RSGCore.Functions.Notify(src, Lang:t('lang_59')..houseid, 'success')
+        Wait(3000)
+        RSGCore.Functions.Notify(src, Lang:t('lang_56')..updatedCredit, 'primary')
+    else
+        RSGCore.Functions.Notify(src, Lang:t('lang_57'), 'error')
+    end
+end)
 --------------------------------------------------------------------------------------------------
 
 -- get all door states
@@ -166,12 +226,20 @@ RegisterNetEvent('rsg-houses:server:GetSpecificDoorState', function(door)
 end)
 
 -- update door state
-RegisterNetEvent('rsg-houses:server:UpdateDoorState', function(doorid, doorstate)
+--[[ RegisterNetEvent('rsg-houses:server:UpdateDoorState', function(doorid, doorstate)
     local src = source
 
     MySQL.update('UPDATE doors SET doorstate = ? WHERE doorid = ?', {doorstate, doorid})
 
     TriggerClientEvent('rsg-houses:client:GetSpecificDoorState', src, doorid, doorstate)
+end) ]]
+
+RegisterNetEvent('rsg-houses:server:UpdateDoorStateRestart', function()
+    local result = MySQL.query.await('SELECT * FROM doors WHERE doorstate=@doorstate', {['@doorstate'] = 1})
+    
+    if not result then
+        MySQL.update('UPDATE doors SET doorstate = 1')
+    end
 end)
 
 --------------------------------------------------------------------------------------------------
@@ -239,7 +307,7 @@ BillingInterval = function()
         end
 
         if row.agent == 'newhanover' then
-            exports['rsg-bossmenu']:AddMoney('govenor1', Config.LandTaxPerCycle)
+           exports['rsg-bossmenu']:AddMoney('govenor1', Config.LandTaxPerCycle)
         end
 
         if row.agent == 'westelizabeth' then
@@ -278,7 +346,7 @@ RegisterNetEvent('rsg-houses:server:addguest', function(cid, houseid)
     local keycount = MySQL.prepare.await('SELECT COUNT(*) FROM player_housekeys WHERE citizenid = ? AND houseid = ?', {cid, houseid})
 
     if keycount >= 1 then
-        RSGCore.Functions.Notify(src, 'Target person already has a key to another house!', 'error')
+        RSGCore.Functions.Notify(src, Lang:t('lang_60'), 'error')
         return
     end
 
@@ -289,7 +357,7 @@ RegisterNetEvent('rsg-houses:server:addguest', function(cid, houseid)
         ['@guest']      = 1,
     })
 
-    RSGCore.Functions.Notify(src, cid..' added as a Guest in your house!', 'success')
+    RSGCore.Functions.Notify(src, cid..Lang:t('lang_61'), 'success')
 end)
 
 -- remove house guest
@@ -298,5 +366,5 @@ RegisterNetEvent('rsg-houses:server:removeguest', function(data)
 
     MySQL.update('DELETE FROM player_housekeys WHERE houseid = ? AND citizenid = ?', {data.houseid, data.guestcid})
 
-    RSGCore.Functions.Notify(src, data.guestcid..' removed from your house\'s Guest list!', 'success')
+    RSGCore.Functions.Notify(src, data.guestcid..Lang:t('lang_62'), 'success')
 end)

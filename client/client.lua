@@ -11,7 +11,7 @@ local checked = false
 local doorStatus = '~e~Locked~q~'
 local createdEntries = {}
 local doorLists = {}
-
+local currenthouseshop = nil
 
 --[[ Functions: Start ]]--
 
@@ -62,21 +62,39 @@ end
 --[[ Functions: Start ]]--
 
 
-
 --[[ Threads: Start ]]--
 
 -- Real Estate Agent Prompts
-CreateThread(function()
+ CreateThread(function()
     for i = 1, #Config.EstateAgents do
         local agent = Config.EstateAgents[i]
 
-        exports['rsg-core']:createPrompt(agent.prompt, agent.coords, RSGCore.Shared.Keybinds['J'], 'Talk to ' .. agent.name,
+        exports['rsg-core']:createPrompt(agent.prompt, agent.coords, RSGCore.Shared.Keybinds['G'], Lang:t('lang_0') .. agent.name,
         {
             type = 'client',
             event = 'rsg-houses:client:agentmenu',
             args = {agent.location},
         })
-
+        
+        --[[exports['rsg-target']:AddBoxZone(agent.prompt, agent.coords, 1, 1, {
+            name = "housingAgent",
+            heading = 0,
+            debugPoly = false,
+            minZ = -400,
+            maxZ = 400,
+}, {
+    options = {
+        {
+            type = "client",
+            action = function(entity) 
+                    TriggerEvent('rsg-houses:client:agentmenu', agent.location)
+                  end,
+            icon = "fas fa-house",
+            label = "TALK TO AGENT",
+        },
+    },
+    distance = 2.5
+} )]]
         createdEntries[#createdEntries + 1] = {type = "PROMPT", handle = agent.prompt}
 
         if agent.showblip then
@@ -112,7 +130,7 @@ AddEventHandler('rsg-houses:client:CheckBlip', function()
 
             SetBlipSprite(HouseBlip, `blip_proc_home`, true)
             SetBlipScale(HouseBlip, 0.1)
-            Citizen.InvokeNative(0x9CB1A1623062F402, HouseBlip, 'Home Sweet Home')
+            Citizen.InvokeNative(0x9CB1A1623062F402, HouseBlip, Lang:t('lang_1'))
 
             createdEntries[#createdEntries + 1] = {type = "BLIP", handle = HouseBlip}
 
@@ -213,7 +231,7 @@ CreateThread(function()
                     checked = true
                 end
 
-                local label = CreateVarString(10, 'LITERAL_STRING', house.name..': '..doorStatus)
+                 local label = CreateVarString(10, 'LITERAL_STRING', house.name..': '..doorStatus)
 
                 PromptSetActiveGroupThisFrame(doorLockPrompt, label)
 
@@ -227,14 +245,35 @@ CreateThread(function()
 
         Wait(t)
     end
-end)
+end) 
+--[[ exports['rsg-target']:AddBoxZone(house.doorid, doorcoords, 1, 1, {
+    name = "housing",
+    heading = 0,
+    debugPoly = false,
+    minZ = -400,
+    maxZ = 400,
+}, {
+    options = {
+{
+    type = "client",
+    action = function(entity) 
+            TriggerEvent('rsg-houses:client:toggledoor', house.doorid, house.houseid)
+          end,
+    icon = "fas fa-key",
+    label = "TRY KEY",
+},
+},
+distance = 2.5
+})
+end
+end) ]]
 
 -- House Menu Prompt
 CreateThread(function()
     for i = 1, #Config.Houses do
         local house = Config.Houses[i]
 
-        exports['rsg-core']:createPrompt(house.houseprompt, house.menucoords, RSGCore.Shared.Keybinds['J'], 'Open House Menu',
+        exports['rsg-core']:createPrompt(house.houseprompt, house.menucoords, RSGCore.Shared.Keybinds['J'], Lang:t('lang_2'),
         {
             type = 'client',
             event = 'rsg-houses:client:housemenu',
@@ -246,8 +285,6 @@ CreateThread(function()
 end)
 
 --[[ Threads: End ]]--
-
-
 
 --[[ Events: Start ]]--
 
@@ -264,48 +301,49 @@ RegisterNetEvent('rsg-houses:client:GetSpecificDoorState', function(id, state)
 end)
 
 RegisterNetEvent('rsg-houses:client:agentmenu', function(location)
-    exports['rsg-menu']:openMenu(
-    {
-        {
-            header = 'Estate Agent',
-            isMenuHeader = true,
-        },
-        {
-            header = 'Buy Property',
-            txt = '',
-            icon = "fas fa-home",
-            params = {
-                event = 'rsg-houses:client:buymenu',
-                isServer = false,
-                args = { agentlocation = location }
+    lib.registerContext({
+        id = "estate_agent_menu",
+        title = Lang:t('lang_3'), --'Weapon Smithing',
+        options = {
+                {   title = Lang:t('lang_4'), --'Boss Manager',
+                    icon = 'fa-solid fa-user',
+                    description = Lang:t('lang_5'), --'Manage employees and business',
+                    event = 'rsg-houses:client:buymenu',
+                    arrow = true,
+                    args = { 
+                        isServer = false,
+                        agentlocation = location }
+                },
+                {   title = Lang:t('lang_6'), --'Boss Manager',
+                    icon = 'fa-solid fa-user',
+                    description = Lang:t('lang_7'), --'Manage employees and business',
+                    event = 'rsg-houses:client:sellmenu',
+                    arrow = true,
+                    args = { 
+                        isServer = false,
+                        agentlocation = location }
+                },
+                {
+                    title = Lang:t('lang_8'),
+                    description = Lang:t('lang_9'),
+                    icon = 'fa-solid fa-sack-dollar',
+                    event = 'rsg-houses:client:houseshopCheckMoney',
+                    args = { },
+                    arrow = true
+                },
             }
-        },
-        {
-            header = 'Sell Property',
-            txt = '',
-            icon = "fas fa-home",
-            params = {
-                event = 'rsg-houses:client:sellmenu',
-                isServer = false,
-                args = { agentlocation = location }
-            }
-        },
-        {
-            header = 'Close Menu',
-            txt = '',
-            params = {
-                event = 'rsg-menu:closeMenu'
-            }
-        }
-    })
+        })
+    lib.showContext("estate_agent_menu")
 end)
 
+--- NEWS BUY AND SELL HOUSE TO AGENTMENU ON TEST
 -- Buy House Menu
 RegisterNetEvent('rsg-houses:client:buymenu', function(data)
-    local GetHouseInfo =
+    -- ANTIGUO MENU
+    
+     local GetHouseInfo =
     {
-        {
-            header = 'Buy House',
+        {   header = Lang:t('lang_10'),
             isMenuHeader = true,
             icon = "fas fa-home"
         }
@@ -321,16 +359,13 @@ RegisterNetEvent('rsg-houses:client:buymenu', function(data)
 
             if agent == data.agentlocation and owned == 0 then
                 GetHouseInfo[#GetHouseInfo + 1] =
-                {
-                    header = houseid,
-                    txt = 'Price $'..house.price..' : Land Tax $'..Config.LandTaxPerCycle,
+                {   header = houseid,
+                    txt = Lang:t('lang_11')..house.price..Lang:t('lang_12')..Config.LandTaxPerCycle,
                     icon = "fas fa-home",
                     params =
-                    {
-                        event = 'rsg-houses:server:buyhouse',
+                    {   event = 'rsg-houses:server:buyhouse',
                         args =
-                        {
-                            house = houseid,
+                        {   house = houseid,
                             price = price,
                             blip = HouseBlip
                         },
@@ -342,14 +377,55 @@ RegisterNetEvent('rsg-houses:client:buymenu', function(data)
 
         exports['rsg-menu']:openMenu(GetHouseInfo)
     end)
+    -- NUEVO MENU / Buy House lib
+    --[[local menuOptionsbuyhouse = { }
+    RSGCore.Functions.TriggerCallback('rsg-houses:server:GetHouseInfo', function(cb)
+
+        for i = 1, #cb do
+            local house = cb[i]
+            local agent = house.agent
+            local owned = house.owned
+            local houseid = house.houseid
+            local price = house.price
+
+            if agent == data.agentlocation and owned == 0 then
+                menuOptionsbuyhouse[#menuOptionsbuyhouse + 1] = {
+                    title = houseid,
+                    description = Lang:t('lang_11') .. house.price .. Lang:t('lang_12') .. Config.LandTaxPerCycle,
+                    icon = 'fas fa-home',
+                    event = 'rsg-houses:server:buyhouse',
+                    args =
+                        {
+                            isServer = true,
+                            house = houseid,
+                            price = price,
+                            blip = HouseBlip
+                        },
+                }
+            end
+        end
+
+        -- Registra el menú con lib y muestra el menú
+        lib.registerContext({
+            id = 'buy_house_menu',
+            title = Lang:t('lang_10'),
+            menu = "estate_agent_menu",
+            icon = 'fas fa-home',
+            options = menuOptionsbuyhouse,
+            position = 'top-right',
+        })
+
+        lib.showContext('buy_house_menu')
+    end)]]
+
 end)
 
 -- Sell House Menu
-RegisterNetEvent('rsg-houses:client:sellmenu', function(data)
+ RegisterNetEvent('rsg-houses:client:sellmenu', function(data)
+    -- ANTIGUO MENU
     local GetOwnedHouseInfo =
     {
-        {
-            header = 'Sell House',
+        {   header = Lang:t('lang_13'),
             isMenuHeader = true,
             icon = "fas fa-home"
         }
@@ -367,7 +443,7 @@ RegisterNetEvent('rsg-houses:client:sellmenu', function(data)
                 GetOwnedHouseInfo[#GetOwnedHouseInfo + 1] =
                 {
                     header = houseid,
-                    txt = 'Sell Price $'..sellprice,
+                    txt = Lang:t('lang_14')..sellprice,
                     icon = "fas fa-home",
                     params =
                     {
@@ -386,7 +462,110 @@ RegisterNetEvent('rsg-houses:client:sellmenu', function(data)
 
         exports['rsg-menu']:openMenu(GetOwnedHouseInfo)
     end)
+
+    -- NUEVO MENU
+    --[[local menuOptionsellhouse = {  }
+    RSGCore.Functions.TriggerCallback('rsg-houses:server:GetOwnedHouseInfo', function(cb)
+        for i = 1, #cb do
+            local house = cb[i]
+            local agent = house.agent
+            local houseid = house.houseid
+            local owned = house.owned
+            local sellback = Config.SellBack
+            local sellprice = (house.price * sellback)
+
+            if agent == data.agentlocation and owned == 1 then
+                menuOptionsellhouse[#menuOptionsellhouse + 1] = {
+                    title = houseid,
+                    description = Lang:t('lang_14') .. sellprice,
+                    icon = 'fas fa-home',
+                    event = 'rsg-houses:server:sellhouse',
+                    args = {
+                        isServer = true,
+                        house = houseid,
+                        price = sellprice,
+                        blip = HouseBlip
+                    },
+                }
+            end
+        end
+
+        -- Registra el menú con lib y muestra el menú
+        lib.registerContext({
+            id = 'sell_house_menu',
+            title = Lang:t('lang_13'),
+            icon = 'fas fa-home',
+            menu = "estate_agent_menu",
+            options = menuOptionsellhouse,
+            position = 'top-right',
+        })
+
+        lib.showContext('sell_house_menu')
+    end)]]
 end)
+--------------
+-- NEW PART TEST NO FINISH
+-----------
+-- houseshop money
+-------------------------------------------------------------------------------------------
+-- En el evento que obtiene el saldo de la tienda de propiedades (houseshopGetMoney)
+--[[ RegisterNetEvent('rsg-houses:client:houseshopGetMoney', function()
+    RSGCore.Functions.TriggerCallback('rsg-houses:server:houseshopGetMoney', function(checkmoney)
+        -- Cuando se obtiene el saldo, muestra el menú con el saldo actual
+        ShowHouseshopMoneyMenu(checkmoney.money)
+    end, currenthouseshop)
+end) 
+
+-- Función para mostrar el menú con el saldo
+function ShowHouseshopMoneyMenu(money)
+    lib.registerContext({
+        id = 'money_house_menu',
+        title = 'Saldo: $' .. string.format("%.2f", money),
+        menu = 'owner_shop_menu',
+        onBack = function() end,
+        options = {
+            {
+                title = 'Retirar Dinero',
+                description = '¡El dinero te será entregado en efectivo!',
+                icon = 'fa-solid fa-money-bill-transfer',
+                event = 'rsg-houses:client:houseshopWithdraw',
+                args = { money = money }, -- Pasa el saldo actual como argumento
+                arrow = true
+            },
+        }
+    })
+    lib.showContext("money_house_menu")
+end
+
+-- En el evento para retirar dinero
+RegisterNetEvent('rsg-houses:client:houseshopWithdraw', function(data)
+    local money = data.money -- Obtiene el saldo actual del argumento
+
+    local input = lib.inputDialog('Retiro Máximo: $' .. string.format("%.2f", money), {
+        { 
+            label = '(caja sensible a mayúsculas)',
+            type = 'input',
+            required = true,
+            icon = 'fa-solid fa-dollar-sign'
+        },
+    })
+
+    if not input then
+        return
+    end
+
+    if tonumber(input[1]) == nil then
+        return
+    end
+
+    if money >= tonumber(input[1]) then
+        TriggerServerEvent('rsg-houses:server:houseshopWithdraw', currenthouseshop, tonumber(input[1]))
+    else
+        RSGCore.Functions.Notify('Cantidad Inválida', 'error')
+    end
+end)]]
+------------------
+--- FINISH NEWS BUY AND SELL HOUSE TO AGENTMENU ON TEST
 
 -- Lock / Unlock Door
 RegisterNetEvent('rsg-houses:client:toggledoor', function(door, house)
@@ -422,7 +601,7 @@ RegisterNetEvent('rsg-houses:client:toggledoor', function(door, house)
 
                         TriggerServerEvent('rsg-houses:server:UpdateDoorState', door, 1)
 
-                        RSGCore.Functions.Notify('Locked!', 'error')
+                        RSGCore.Functions.Notify(Lang:t('lang_15'), 'error')
 
                         doorStatus = '~e~Locked~q~'
                     end
@@ -445,99 +624,65 @@ RegisterNetEvent('rsg-houses:client:housemenu', function(houseid)
             local guest = housekey.guest
 
             if citizenid == playercitizenid and houseids == houseid and guest == 0 then
-                exports['rsg-menu']:openMenu(
-                {
-                    {
-                        header = 'Owner House Menu',
-                        isMenuHeader = true,
-                        icon = "fas fa-home"
-                    },
-                    {
-                        header = 'Open Storage',
-                        txt = '',
-                        icon = 'fas fa-box',
-                        params = {
-                            event = 'rsg-houses:client:storage',
-                            isServer = false,
-                            args = {house = houseid}
-                        }
-                    },
-                    {
-                        header = 'Outfits',
-                        txt = '',
-                        icon = 'fas fa-hat-cowboy-side',
-                        params = {
+                -- NUEVO MENU
+                lib.registerContext(
+                    {   id = 'house_menu',
+                    title = Lang:t('lang_16')..houseid,
+                    position = 'top-right',
+                    options = {
+                        {   title = Lang:t('lang_17'),
+                            description = Lang:t('lang_18'),
+                            icon = 'fas fa-hat-cowboy-side',
                             event = 'rsg-clothes:OpenOutfits',
-                            isServer = false,
-                            args = {}
-                        }
-                    },
-                    {
-                        header = 'Land Tax',
-                        txt = '',
-                        icon = 'fas fa-dollar-sign',
-                        params = {
-                            event = 'rsg-houses:client:creditmenu',
-                            isServer = false,
-                            args = {house = houseid}
-                        }
-                    },
-                    {
-                        header = 'House Guests',
-                        txt = '',
-                        icon = 'fa-solid fa-circle-user',
-                        params = {
+                            arrow = true,
+                            args = { },
+                        },
+                        {   title = Lang:t('lang_19'),
+                            description = Lang:t('lang_20'),
+                            icon = 'fas fa-box',
+                            event = 'rsg-houses:client:storage',
+                            arrow = true,
+                            args = { house = houseid },
+                        },
+                        {   title = Lang:t('lang_21'),
+                            description = Lang:t('lang_22'),
+                            icon = 'fas fa-glass-cheers',
                             event = 'rsg-houses:client:guestmenu',
-                            isServer = false,
-                            args = {house = houseid}
-                        }
-                    },
-                    {
-                        header = 'Close Menu',
-                        txt = '',
-                        icon = "fas fa-times",
-                        params = {
-                            event = 'rsg-menu:closeMenu'
-                        }
+                            arrow = true,
+                            args = { house = houseid },
+                        },
+                        {   title = Lang:t('lang_23'),
+                            description = Lang:t('lang_24'),
+                            icon = 'fas fa-dollar-sign',
+                            event = 'rsg-houses:client:creditmenu',
+                            arrow = true,
+                            args = { house = houseid },
+                        },
                     }
                 })
+                lib.showContext('house_menu')
             elseif citizenid == playercitizenid and houseids == houseid and guest == 1 then
-                exports['rsg-menu']:openMenu(
-                {
-                    {
-                        header = 'Guest House Menu',
-                        isMenuHeader = true,
-                        icon = "fas fa-home"
-                    },
-                    {
-                        header = 'Open Storage',
-                        txt = '',
-                        icon = 'fas fa-box',
-                        params = {
-                            event = 'rsg-houses:client:storage',
-                            isServer = false,
-                            args = {house = houseid}
-                        }
-                    },
-                    {
-                        header = 'Outfits',
-                        txt = '',
-                        icon = 'fas fa-hat-cowboy-side',
-                        params = {
+                -- NUEVO MENU
+                lib.registerContext(
+                {   id = 'house_guest_menu',
+                    title = Lang:t('lang_25')..houseid,
+                    position = 'top-right',
+                    options = {
+                        {   title = Lang:t('lang_17'),
+                            description = Lang:t('lang_18'),
+                            icon = 'fas fa-hat-cowboy-side',
                             event = 'rsg-clothes:OpenOutfits',
-                            isServer = false,
-                            args = {}
-                        }
-                    },
-                    {
-                        header = 'Close Menu',
-                        txt = '',
-                        icon = "fas fa-times",
-                        params = {
-                            event = 'rsg-menu:closeMenu'
-                        }
+                            args = { },
+                        },
+                        {   title = Lang:t('lang_19'),
+                            description = Lang:t('lang_20'),
+                            icon = 'fas fa-box',
+                            event = 'rsg-houses:client:storage',
+                            args = { house = houseid },
+                        },
                     }
                 })
+                lib.showContext('house_guest_menu')
             end
         end
     end)
@@ -552,70 +697,118 @@ RegisterNetEvent('rsg-houses:client:creditmenu', function(data)
         local playercitizenid = RSGCore.Functions.GetPlayerData().citizenid
 
         if housecitizenid ~= playercitizenid then
-            RSGCore.Functions.Notify('You didn\'t own this house!', 'error')
+            RSGCore.Functions.Notify(Lang:t('lang_26'), 'error')
             return
         end
 
         if housecitizenid == playercitizenid then
-            exports['rsg-menu']:openMenu(
-            {
-                {
-                    header = 'Land Tax Credit',
-                    isMenuHeader = true,
-                    txt = 'current credit $'..credit,
-                    icon = "fas fa-home"
-                },
-                {
-                    header = 'Add Credit',
-                    txt = '',
-                    icon = 'fas fa-dollar-sign',
-                    params =
+            --NUEVO MENU
+            lib.registerContext({
+                id = 'house_credit_menu',
+                title = Lang:t('lang_27'),
+                menu = "house_menu",
+                icon = 'fas fa-home',
+                position = 'top-right',
+                options = {
                     {
-                        event = 'rsg-houses:client:addcredit',
-                        isServer = false,
+                        title = Lang:t('lang_28') .. credit,
+                        description = Lang:t('lang_29'),
+                        icon = 'fas fa-dollar-sign',
                         args =
-                        {
-                            houseid = houseid,
-                            credit = credit
-                        }
-                    }
-                },
-                {
-                    header = 'Close Menu',
-                    txt = '',
-                    icon = "fas fa-times",
-                    params = {
-                        event = 'rsg-menu:closeMenu'
+                            {   isServer = false,
+                                houseid = houseid,
+                                credit = credit
+                            }
+                    },
+                    {
+                        title = Lang:t('lang_30'),
+                        description =  Lang:t('lang_31'),
+                        icon = 'fas fa-dollar-sign',
+                        event = 'rsg-houses:client:addcredit',
+                        args =
+                            {   isServer = false,
+                                houseid = houseid,
+                                credit = credit
+                            }
+                    },
+                    {
+                        title = Lang:t('lang_32'),
+                        description =  Lang:t('lang_33'),
+                        icon = 'fas fa-dollar-sign',
+                        event = 'rsg-houses:client:removecredit',
+                        args =
+                            {   isServer = false,
+                                houseid = houseid,
+                                credit = credit
+                            }
                     }
                 }
             })
+
+            lib.showContext('house_credit_menu')
         end
     end)
-end)
+end) 
 
 -- credit form
 RegisterNetEvent('rsg-houses:client:addcredit', function(data)
-    local dialog = exports['rsg-input']:ShowInput({
-        header = 'Add Land Tax Credit',
-        submitText = "Add Credit",
-        inputs = {
-            {
-                text = 'Amount',
-                name = "addcredit",
-                type = "number",
-                isRequired = true,
-                default = 50,
-            },
-        }
+    -- NUEVO INPUT
+    local input = lib.inputDialog(Lang:t('lang_34'), {
+        { 
+            type = 'number',
+            title = Lang:t('lang_35'),
+            description = Lang:t('lang_36'),
+            required = true,
+            default = 50,
+        },
+    }, {
+        allowCancel = true,  -- Permitir que el usuario cancele el diálogo
     })
-    if dialog ~= nil then
-        for k,v in pairs(dialog) do
-            if Config.Debug == true then
-                print(dialog.addcredit)
-                print(data.houseid)
-            end
-            local newcredit = (data.credit + dialog.addcredit)
-            TriggerServerEvent('rsg-houses:server:addcredit', tonumber(newcredit), tonumber(dialog.addcredit), data.houseid)
+
+    if input then
+        local amount = tonumber(input[1])
+
+        if Config.Debug == true then
+            print(amount)
+            print(data.houseid)
+        end
+
+        local newcredit = data.credit + amount
+        TriggerServerEvent('rsg-houses:server:addcredit', newcredit, amount, data.houseid)
+    else
+        if Config.Debug == true then
+            print("Se canceló el diálogo de entrada.")
+        end
+    end
+end)
+
+RegisterNetEvent('rsg-houses:client:removecredit', function(data)
+    -- NUEVO INPUT
+    local input = lib.inputDialog(Lang:t('lang_34'), {
+        { 
+            type = 'number',
+            title = Lang:t('lang_35'),
+            description = Lang:t('lang_37'),
+            required = true,
+            default = 50,
+        },
+    }, {
+        allowCancel = true,  -- Permitir que el usuario cancele el diálogo
+    })
+
+    if input then
+        local amount = tonumber(input[1])
+
+        if Config.Debug == true then
+            print(amount)
+            print(data.houseid)
+        end
+
+        local newcredit = data.credit - amount
+        TriggerServerEvent('rsg-houses:server:removecredit', newcredit, amount, data.houseid)
+    else
+        if Config.Debug == true then
+            print("Se canceló el diálogo de entrada.")
         end
     end
 end)
@@ -628,71 +821,52 @@ RegisterNetEvent('rsg-houses:client:guestmenu', function(data)
         local playercitizenid = RSGCore.Functions.GetPlayerData().citizenid
 
         if housecitizenid ~= playercitizenid then
-            RSGCore.Functions.Notify('You didn\'t own this house!', 'error')
+            RSGCore.Functions.Notify(Lang:t('lang_26'), 'error')
             return
         end
 
         if housecitizenid == playercitizenid then
-            exports['rsg-menu']:openMenu(
-            {
-                {
-                    header = 'House Guests',
-                    isMenuHeader = true,
-                    txt = '',
-                    icon = "fas fa-home"
-                },
-                {
-                    header = 'Add Guest',
-                    txt = '',
-                    icon = 'fa-solid fa-circle-user',
-                    params =
-                    {
+            -- NUEVO MENU
+            lib.registerContext(
+            {   id = 'house_addguest_menu',
+                title = Lang:t('lang_38')..houseid,
+                menu = "house_menu",
+                position = 'top-right',
+                options = {
+                    {   title = Lang:t('lang_39'),
+                        description = Lang:t('lang_40'),
+                        icon = 'fas fa-house',
                         event = 'rsg-houses:client:addguest',
-                        isServer = false,
-                        args =
-                        {
-                            houseid = houseid
-                        }
-                    }
-                },
-                {
-                    header = 'Remove Guest',
-                    txt = '',
-                    icon = 'fa-solid fa-circle-user',
-                    params =
-                    {
+                        arrow = true,
+                        args = { houseid = houseid, isServer = false, },
+                    },
+                    {   title = Lang:t('lang_41'),
+                        description = Lang:t('lang_42'),
+                        icon = 'fas fa-book',
                         event = 'rsg-houses:client:removeguest',
-                        isServer = false,
-                        args =
-                        {
-                            houseid = houseid
-                        }
-                    }
-                },
-                {
-                    header = 'Close Menu',
-                    txt = '',
-                    icon = "fas fa-times",
-                    params = {
-                        event = 'rsg-menu:closeMenu'
-                    }
+                        arrow = true,
+                        args = { houseid = houseid, isServer = false, },
+                    },
                 }
             })
+            lib.showContext('house_addguest_menu')
         end
     end)
 end)
 
+--- NEWS ADDGUEST AND REMOVEGUEST TO guestmenu ON TEST
 -- Add House Guest
 RegisterNetEvent('rsg-houses:client:addguest', function(data)
     local upr = string.upper
+    -- ANTIGUO INPUT
     local dialog = exports['rsg-input']:ShowInput(
     {
-        header = 'Add House Guest',
-        submitText = "Add",
+        header = Lang:t('lang_43'),
+        submitText = Lang:t('lang_44'),
         inputs =
         {
             {
-                text = 'Citizen ID',
+                text = Lang:t('lang_45'),
                 name = "addguest",
                 type = "text",
                 isRequired = true
@@ -712,15 +886,44 @@ RegisterNetEvent('rsg-houses:client:addguest', function(data)
         print("")
     end
 
-    TriggerServerEvent('rsg-houses:server:addguest', upr(addguest), houseid)
+    TriggerServerEvent('rsg-houses:server:addguest', upr(addguest), houseid) 
+    --[[-- NUEVO INPUT
+     local dialog = lib.inputDialog(Lang:t('lang_43'), {
+        --{   type = 'input',            label = Lang:t('lang_44'),            description = Lang:t('lang_45'),            required = true,        },
+        {   type = 'input',            label = Lang:t('lang_46'),      description = Lang:t('lang_47'),       required = true,        },
+    }, {
+        allowCancel = true,  -- Permitir que el usuario cancele el diálogo
+    })
+
+    if dialog then
+        --local name = dialog[1].value
+        local citizenId = upr(dialog[1].value)  -- Acceder al valor del Citizen ID
+
+        local houseid = data.houseid
+
+        if Config.Debug then
+            print("")
+            print("House ID: " .. houseid)
+            print("Citizen ID: " .. citizenId)
+            print("")
+        end
+
+        -- Envía los valores al servidor
+        TriggerServerEvent('rsg-houses:server:addguest', citizenId, houseid)
+    else
+        if Config.Debug then
+        print("Se canceló el cuadro de diálogo de entrada.")
+        end
+    end]]
 end)
 
 -- Remove House Guest
-RegisterNetEvent('rsg-houses:client:removeguest', function(data)
+ RegisterNetEvent('rsg-houses:client:removeguest', function(data)
+    -- ANTIGUO MENU
     local GuestMenu =
     {
         {
-            header = 'Remove Guest',
+            header = Lang:t('lang_48'),
             isMenuHeader = true,
             icon = "fa-solid fa-circle-info"
         }
@@ -736,7 +939,7 @@ RegisterNetEvent('rsg-houses:client:removeguest', function(data)
                 GuestMenu[#GuestMenu + 1] =
                 {
                     header = citizenid,
-                    txt = '',
+                    txt = Lang:t('lang_49'),
                     icon = "fa-solid fa-circle-user",
                     params =
                     {
@@ -754,7 +957,7 @@ RegisterNetEvent('rsg-houses:client:removeguest', function(data)
 
         GuestMenu[#GuestMenu + 1] =
         {
-            header = 'Close',
+            header = Lang:t('lang_50'),
             icon = "fas fa-times",
             params =
             {
@@ -764,15 +967,47 @@ RegisterNetEvent('rsg-houses:client:removeguest', function(data)
 
         exports['rsg-menu']:openMenu(GuestMenu)
     end)
+
+    -- NUEVO MENU
+    --[[local GuestMenuOptions = {}  -- Almacena las opciones de menú
+
+    RSGCore.Functions.TriggerCallback('rsg-houses:server:GetGuestHouseKeys', function(cb)
+        for i = 1, #cb do
+            local guest = cb[i]
+            local houseid = guest.houseid
+            local citizenid = guest.citizenid
+
+            if houseid == data.houseid then
+                local option = {
+                    title = citizenid,
+                    icon = 'fa-solid fa-circle-user',
+                    event = 'rsg-houses:server:removeguest',
+                    args = { houseid = houseid, citizenid = citizenid }
+                }
+
+                table.insert(GuestMenuOptions, option)
+            end
+        end
+
+        -- Agrega las opciones de huéspedes al menú principal y la opción de "Close"
+        lib.registerContext({
+            id = 'remove_guest_menu',
+            title = Lang:t('lang_48'),
+            options = GuestMenuOptions,
+        })
+
+        -- Muestra el menú principal "Remove Guest"
+        lib.showContext('remove_guest_menu')
+    end)]]
 end)
+---- FINISH NEWS guestmenu ON TEST
 
 -- House Storage
 RegisterNetEvent('rsg-houses:client:storage', function(data)
     local house = data.house
 
-    TriggerServerEvent("inventory:server:OpenInventory", "stash", data.house,
-    {
-        maxweight = Config.StorageMaxWeight,
+    TriggerServerEvent("inventory:server:OpenInventory", Lang:t('lang_51'), data.house,
+    {   maxweight = Config.StorageMaxWeight,
         slots = Config.StorageMaxSlots,
     })
 
@@ -782,8 +1017,11 @@ end)
 --[[ Threads: End ]]--
 
 
-
 --[[ Resource Cleanup ]]--
+AddEventHandler('onResourceStart', function(resource)
+    TriggerServerEvent('rsg-houses:server:UpdateDoorStateRestart')
+end)
+
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() then return end
 
