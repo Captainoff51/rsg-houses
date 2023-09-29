@@ -69,8 +69,7 @@ end
         local agent = Config.EstateAgents[i]
 
         exports['rsg-core']:createPrompt(agent.prompt, agent.coords, RSGCore.Shared.Keybinds['G'], Lang:t('lang_0') .. agent.name,
-        {
-            type = 'client',
+        {   type = 'client',
             event = 'rsg-houses:client:agentmenu',
             args = {agent.location},
         })
@@ -93,7 +92,6 @@ end)
 AddEventHandler('rsg-houses:client:CheckBlip', function()
     RSGCore.Functions.TriggerCallback('rsg-houses:server:GetOwnedHouseInfo', function(result)
         local houseid = result[1].houseid
-
         myhouse = houseid
     end)
 
@@ -106,11 +104,9 @@ AddEventHandler('rsg-houses:client:CheckBlip', function()
 
         if Config.OwnedHouseBlips and house.houseid == myhouse then
             HouseBlip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, house.blipcoords)
-
             SetBlipSprite(HouseBlip, `blip_proc_home`, true)
             SetBlipScale(HouseBlip, 0.1)
             Citizen.InvokeNative(0x9CB1A1623062F402, HouseBlip, Lang:t('lang_1'))
-
             createdEntries[#createdEntries + 1] = {type = "BLIP", handle = HouseBlip}
 
             break
@@ -118,11 +114,9 @@ AddEventHandler('rsg-houses:client:CheckBlip', function()
 
         if not Config.OwnedHouseBlips and house.showblip then
             HouseBlip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, house.blipcoords)
-
             SetBlipSprite(HouseBlip, `blip_proc_home`, true)
             SetBlipScale(HouseBlip, 0.1)
             Citizen.InvokeNative(0x9CB1A1623062F402, HouseBlip, house.name)
-
             createdEntries[#createdEntries + 1] = {type = "BLIP", handle = HouseBlip}
         end
     end
@@ -140,7 +134,6 @@ AddEventHandler('rsg-houses:client:BlipsOnSpawn', function(blip)
 
         myhouse = houseid
         blipchecked = false
-
         TriggerEvent('rsg-houses:client:BlipLoop')
     end)
 end)
@@ -152,9 +145,7 @@ AddEventHandler('rsg-houses:client:BlipLoop', function()
     CreateThread(function()
         while not blipchecked do
             TriggerEvent('rsg-houses:client:CheckBlip')
-
             blipchecked = true
-
             Wait(10000)
         end
     end)
@@ -168,7 +159,6 @@ CreateThread(function()
         RSGCore.Functions.TriggerCallback('rsg-houses:server:GetDoorState', function(results)
             for i = 1, #results do
                 local door = results[i]
-
                 Citizen.InvokeNative(0xD99229FE93B46286, tonumber(door.doorid), 1, 1, 0, 0, 0, 0) -- AddDoorToSystemNew
                 Citizen.InvokeNative(0x6BAB9442830C7F53, tonumber(door.doorid), door.doorstate) -- DoorSystemSetDoorState
             end
@@ -181,18 +171,14 @@ end)
 -- Get Specific Door State from Database
 CreateThread(function()
     local ped = PlayerPedId()
-
     DoorLockPrompt()
-
     while true do
         ped = PlayerPedId()
         local playerCoords = GetEntityCoords(ped)
         local t = 1000
-
         for i = 1, #Config.HouseDoors do
             local house = Config.HouseDoors[i]
             local distance = #(playerCoords - house.doorcoords)
-
             if distance < 2.0 then
                 t = 4
                 HouseID = house.houseid
@@ -204,7 +190,6 @@ CreateThread(function()
                     print("Door ID: "..DoorID)
                     print("")
                 end
-
                 if not checked then
                     TriggerServerEvent('rsg-houses:server:GetSpecificDoorState', DoorID)
                     checked = true
@@ -221,7 +206,6 @@ CreateThread(function()
                 end
             end
         end
-
         Wait(t)
     end
 end)
@@ -382,70 +366,6 @@ RegisterNetEvent('rsg-houses:client:sellmenu', function(data)
     end)
 end)
 
---------------
--- NEW PART TEST NO FINISH
------------
--- houseshop money
--------------------------------------------------------------------------------------------
--- En el evento que obtiene el saldo de la tienda de propiedades (houseshopGetMoney)
---[[ RegisterNetEvent('rsg-houses:client:houseshopGetMoney', function()
-    RSGCore.Functions.TriggerCallback('rsg-houses:server:houseshopGetMoney', function(checkmoney)
-        -- Cuando se obtiene el saldo, muestra el menú con el saldo actual
-        ShowHouseshopMoneyMenu(checkmoney.money)
-    end, currenthouseshop)
-end) 
-
--- Función para mostrar el menú con el saldo
-function ShowHouseshopMoneyMenu(money)
-    lib.registerContext({
-        id = 'money_house_menu',
-        title = 'Saldo: $' .. string.format("%.2f", money),
-        menu = 'owner_shop_menu',
-        onBack = function() end,
-        options = {
-            {
-                title = 'Retirar Dinero',
-                description = '¡El dinero te será entregado en efectivo!',
-                icon = 'fa-solid fa-money-bill-transfer',
-                event = 'rsg-houses:client:houseshopWithdraw',
-                args = { money = money }, -- Pasa el saldo actual como argumento
-                arrow = true
-            },
-        }
-    })
-    lib.showContext("money_house_menu")
-end
-
--- En el evento para retirar dinero
-RegisterNetEvent('rsg-houses:client:houseshopWithdraw', function(data)
-    local money = data.money -- Obtiene el saldo actual del argumento
-
-    local input = lib.inputDialog('Retiro Máximo: $' .. string.format("%.2f", money), {
-        { 
-            label = '(caja sensible a mayúsculas)',
-            type = 'input',
-            required = true,
-            icon = 'fa-solid fa-dollar-sign'
-        },
-    })
-
-    if not input then
-        return
-    end
-
-    if tonumber(input[1]) == nil then
-        return
-    end
-
-    if money >= tonumber(input[1]) then
-        TriggerServerEvent('rsg-houses:server:houseshopWithdraw', currenthouseshop, tonumber(input[1]))
-    else
-        RSGCore.Functions.Notify('Cantidad Inválida', 'error')
-    end
-end)]]
-------------------
---- FINISH NEWS BUY AND SELL HOUSE TO AGENTMENU ON TEST
-
 -- Lock / Unlock Door
 RegisterNetEvent('rsg-houses:client:toggledoor', function(door, house)
     RSGCore.Functions.TriggerCallback('rsg-houses:server:GetHouseKeys', function(results)
@@ -464,11 +384,9 @@ RegisterNetEvent('rsg-houses:client:toggledoor', function(door, house)
 
                         Citizen.InvokeNative(0xD99229FE93B46286, door, 1, 1, 0, 0, 0, 0) -- AddDoorToSystemNew
                         Citizen.InvokeNative(0x6BAB9442830C7F53, door, 0) -- DoorSystemSetDoorState
-
                         TriggerServerEvent('rsg-houses:server:UpdateDoorState', door, 0)
-
                         RSGCore.Functions.Notify('Unlocked!', 'success')
-
+                                    
                         doorStatus = '~t6~Unocked~q~'
                     end
 
@@ -477,9 +395,7 @@ RegisterNetEvent('rsg-houses:client:toggledoor', function(door, house)
 
                         Citizen.InvokeNative(0xD99229FE93B46286, door, 1, 1, 0, 0, 0, 0) -- AddDoorToSystemNew
                         Citizen.InvokeNative(0x6BAB9442830C7F53, door, 1) -- DoorSystemSetDoorState
-
                         TriggerServerEvent('rsg-houses:server:UpdateDoorState', door, 1)
-
                         RSGCore.Functions.Notify(Lang:t('lang_15'), 'error')
 
                         doorStatus = '~e~Locked~q~'
@@ -503,7 +419,6 @@ RegisterNetEvent('rsg-houses:client:housemenu', function(houseid)
             local guest = housekey.guest
 
             if citizenid == playercitizenid and houseids == houseid and guest == 0 then
-                -- NUEVO MENU
                 lib.registerContext(
                     {   id = 'house_menu',
                     title = Lang:t('lang_16')..houseid,
@@ -541,7 +456,6 @@ RegisterNetEvent('rsg-houses:client:housemenu', function(houseid)
                 })
                 lib.showContext('house_menu')
             elseif citizenid == playercitizenid and houseids == houseid and guest == 1 then
-                -- NUEVO MENU
                 lib.registerContext(
                 {   id = 'house_guest_menu',
                     title = Lang:t('lang_25')..houseid,
@@ -733,7 +647,6 @@ RegisterNetEvent('rsg-houses:client:guestmenu', function(data)
     end)
 end)
 
---- NEWS ADDGUEST AND REMOVEGUEST TO guestmenu ON TEST
 -- Add House Guest
 RegisterNetEvent('rsg-houses:client:addguest', function(data)
     local upr = string.upper
@@ -800,9 +713,6 @@ RegisterNetEvent('rsg-houses:client:removeguest', function(data)
     end)
 end)
 
-
----- FINISH NEWS guestmenu ON TEST
-
 -- House Storage
 RegisterNetEvent('rsg-houses:client:storage', function(data)
     local house = data.house
@@ -816,7 +726,6 @@ RegisterNetEvent('rsg-houses:client:storage', function(data)
 end)
 
 --[[ Threads: End ]]--
-
 
 --[[ Resource Cleanup ]]--
 AddEventHandler('onResourceStart', function(resource)
