@@ -10,21 +10,14 @@ lang_6 = 'Sell a Property',
 lang_7 = 'Not interested anymore, shall I buy it from you?',
 lang_8 = 'View Property Tax',
 lang_9 = 'Check and withdraw money from properties',
--- old buymenu
+-- buymenu
 lang_10 = 'Buy House',
 lang_11 = 'Price $',
 lang_12 = ' : Land Tax $',
--- new buymenu
---lang_10 = 'Buy House',
---lang_11 = 'Price: $',
---lang_12 = ' | Property Tax: $',
--- old sellmenu
+-- sellmenu
 lang_13 = 'Sell House',
 lang_14 = 'Sell Price $',
--- new sellmenu
---lang_13 = 'Sell House',
---lang_14 = 'Selling Price: $',
-
+    
 lang_15 = 'Locked!',
 
 --housemenu
@@ -59,7 +52,7 @@ lang_39 = 'Add Guests',
 lang_40 = '',
 lang_41 = 'Remove Guests',
 lang_42 = '',
--- old addguest
+-- addguest
 lang_43 = 'Add House Guest',
 lang_44 = 'Add',
 lang_45 = 'Citizen ID',
@@ -69,7 +62,7 @@ lang_45 = 'Citizen ID',
 --lang_46 = 'Citizen ID',
 --lang_47 = 'Add the Citizen ID:',
 
--- old removeguest
+-- removeguest
 lang_48 = 'Remove Guest',
 lang_49 = '',
 lang_50 = 'Close',
