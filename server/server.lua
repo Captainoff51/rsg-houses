@@ -84,7 +84,7 @@ RegisterServerEvent('rsg-houses:server:buyhouse', function(data)
         ['@houseid']    = data.house
     })
 
-    Player.Functions.RemoveItem('cash', data.price)
+    Player.Functions.RemoveMoney('cash', data.price)
 
     RSGCore.Functions.Notify(src, Lang:t('lang_53'), 'success')
 
@@ -100,7 +100,7 @@ RegisterServerEvent('rsg-houses:server:sellhouse', function(data)
 
     MySQL.update('DELETE FROM player_housekeys WHERE houseid = ?', {data.house})
 
-    Player.Functions.AddItem('cash', data.price)
+    Player.Functions.AddMoney('cash', data.price)
 
     RSGCore.Functions.Notify(src, Lang:t('lang_54'), 'success')
 
@@ -131,7 +131,7 @@ AddEventHandler('rsg-houses:server:houseshopWithdraw', function(location, smoney
             if result[1].money >= tonumber(smoney) then
                 local nmoney = result[1].money - smoney
                 MySQL.update('UPDATE player_houses SET money = ? WHERE houseid = ?',{nmoney, location})
-                Player.Functions.AddItem('cash', smoney)
+                Player.Functions.AddMoney('cash', smoney)
             else
                 --Notif
             end
