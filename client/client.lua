@@ -717,7 +717,7 @@ end)
 RegisterNetEvent('rsg-houses:client:storage', function(data)
     local house = data.house
 
-    TriggerServerEvent("inventory:server:OpenInventory", Lang:t('lang_51'), data.house,
+    TriggerServerEvent("inventory:server:OpenInventory", "stash", data.house,
     {   maxweight = Config.StorageMaxWeight,
         slots = Config.StorageMaxSlots,
     })
