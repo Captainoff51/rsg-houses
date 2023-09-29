@@ -294,50 +294,6 @@ RegisterNetEvent('rsg-houses:client:agentmenu', function(location)
     lib.showContext("estate_agent_menu")
 end)
 
---- NEWS BUY AND SELL HOUSE TO AGENTMENU ON TEST
---[[ -- Buy House Menu
-RegisterNetEvent('rsg-houses:client:buymenu', function(data)
-    -- ANTIGUO MENU
-    
-     local GetHouseInfo =
-    {
-        {   header = Lang:t('lang_10'),
-            isMenuHeader = true,
-            icon = "fas fa-home"
-        }
-    }
-
-    RSGCore.Functions.TriggerCallback('rsg-houses:server:GetHouseInfo', function(cb)
-        for i = 1, #cb do
-            local house = cb[i]
-            local agent = house.agent
-            local houseid = house.houseid
-            local owned = house.owned
-            local price = house.price
-
-            if agent == data.agentlocation and owned == 0 then
-                GetHouseInfo[#GetHouseInfo + 1] =
-                {   header = houseid,
-                    txt = Lang:t('lang_11')..house.price..Lang:t('lang_12')..Config.LandTaxPerCycle,
-                    icon = "fas fa-home",
-                    params =
-                    {   event = 'rsg-houses:server:buyhouse',
-                        args =
-                        {   house = houseid,
-                            price = price,
-                            blip = HouseBlip
-                        },
-                        isServer = true
-                    }
-                }
-            end
-        end
-
-        exports['rsg-menu']:openMenu(GetHouseInfo)
-    end)
-end) ]]
-
-    -- NUEVO MENU / Buy House lib
 -- Buy House Menu
 RegisterNetEvent('rsg-houses:client:buymenu', function(data)
     local houseContextOptions = {
@@ -815,7 +771,7 @@ RegisterNetEvent('rsg-houses:client:removeguest', function(data)
 
             if houseid == data.houseid then
                 local content = { 
-                    value = citizenid, 
+                    value = citizenid,
                     label = citizenid } -- You can customize the label as needed
                 option[#option + 1] = content
             end
