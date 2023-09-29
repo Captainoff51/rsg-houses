@@ -52,17 +52,17 @@ local Translations = {
         lang_40 = '',
         lang_41 = 'Eliminar Invitados',
         lang_42 = '',
-        -- antiguo addguest
+        -- addguest
         lang_43 = 'Agregar invitado a la casa',
         lang_44 = "Agregar",
-        lang_45 = 'Identificación del ciudadano',
-        -- nuevo addguest
+        lang_45 = 'Identificación del citizenid',
+        
         --lang_44 = 'Nombre',
         --lang_45 = 'Agrega el nombre:',
         --lang_46 = 'Identificación del ciudadano',
         --lang_47 = 'Agrega la identificación del ciudadano:',
     
-        -- antiguo removeguest
+        -- removeguest
         lang_48 = 'Eliminar invitado',
         lang_49 = '',
         lang_50 = 'Cerrar',
