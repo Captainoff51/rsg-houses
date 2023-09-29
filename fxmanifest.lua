@@ -28,8 +28,8 @@ dependencies
 {
     'ox_lib',
     'rsg-core',
-    'rsg-menu',
-    'rsg-input',
+    --'rsg-menu',
+    --'rsg-input',
     'rsg-npcs',
     'rsg-bossmenu'
     
