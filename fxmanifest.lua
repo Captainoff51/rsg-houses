@@ -4,7 +4,7 @@ game 'rdr3'
 lua54 'yes'
 
 author 'RexShack#3041'
-description 'rsg-houses'
+description 'rsg-houses version Sadicius#1150'
 
 client_scripts
 {
@@ -18,7 +18,7 @@ server_scripts
 }
 
 shared_scripts
-{
+{    '@ox_lib/init.lua',
     '@rsg-core/shared/locale.lua',
     'locales/en.lua', -- preferred language
     'config.lua'
@@ -26,9 +26,11 @@ shared_scripts
 
 dependencies
 {
+    'ox_lib',
     'rsg-core',
-    'rsg-menu',
-    'rsg-input',
+    --'rsg-menu',
+    --'rsg-input',
     'rsg-npcs',
     'rsg-bossmenu'
+    
 }
