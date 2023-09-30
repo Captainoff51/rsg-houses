@@ -5,30 +5,27 @@ lua54 'yes'
 
 author 'RexShack#3041'
 description 'rsg-houses'
+version '1.0.0'
 
-client_scripts
-{
+client_scripts {
     'client/client.lua'
 }
 
-server_scripts
-{
+server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'server/server.lua'
 }
 
-shared_scripts
-{    '@ox_lib/init.lua',
+shared_scripts {
+    '@ox_lib/init.lua',
     '@rsg-core/shared/locale.lua',
     'locales/en.lua', -- preferred language
     'config.lua'
 }
 
-dependencies
-{
+dependencies {
     'ox_lib',
     'rsg-core',
     'rsg-npcs',
     'rsg-bossmenu'
-    
 }
