@@ -245,20 +245,20 @@ end)
 RegisterNetEvent('rsg-houses:client:agentmenu', function(location)
     lib.registerContext({
         id = "estate_agent_menu",
-        title = Lang:t('lang_3'), --'Weapon Smithing',
+        title = Lang:t('lang_3'),
         options = {
-                {   title = Lang:t('lang_4'), --'Boss Manager',
+                {   title = Lang:t('lang_4'),
                     icon = 'fa-solid fa-user',
-                    description = Lang:t('lang_5'), --'Manage employees and business',
+                    description = Lang:t('lang_5'),
                     event = 'rsg-houses:client:buymenu',
                     arrow = true,
                     args = { 
                         isServer = false,
                         agentlocation = location }
                 },
-                {   title = Lang:t('lang_6'), --'Boss Manager',
+                {   title = Lang:t('lang_6'),
                     icon = 'fa-solid fa-user',
-                    description = Lang:t('lang_7'), --'Manage employees and business',
+                    description = Lang:t('lang_7'),
                     event = 'rsg-houses:client:sellmenu',
                     arrow = true,
                     args = { 
@@ -495,7 +495,6 @@ RegisterNetEvent('rsg-houses:client:creditmenu', function(data)
         end
 
         if housecitizenid == playercitizenid then
-            --NUEVO MENU
             lib.registerContext({
                 id = 'house_credit_menu',
                 title = Lang:t('lang_27'),
@@ -529,11 +528,11 @@ RegisterNetEvent('rsg-houses:client:creditmenu', function(data)
                         description =  Lang:t('lang_33'),
                         icon = 'fas fa-dollar-sign',
                         event = 'rsg-houses:client:removecredit',
-                        args =
-                            {   isServer = false,
-                                houseid = houseid,
-                                credit = credit
-                            }
+                        args = {
+                            isServer = false,
+                            houseid = houseid,
+                            credit = credit
+                        }
                     }
                 }
             })
@@ -545,7 +544,6 @@ end)
 
 -- credit form
 RegisterNetEvent('rsg-houses:client:addcredit', function(data)
-    -- NUEVO INPUT
     local input = lib.inputDialog(Lang:t('lang_34'), {
         { 
             type = 'number',
@@ -555,7 +553,7 @@ RegisterNetEvent('rsg-houses:client:addcredit', function(data)
             default = 50,
         },
     }, {
-        allowCancel = true,  -- Permitir que el usuario cancele el diálogo
+        allowCancel = true,
     })
 
     if input then
@@ -576,7 +574,6 @@ RegisterNetEvent('rsg-houses:client:addcredit', function(data)
 end)
 
 RegisterNetEvent('rsg-houses:client:removecredit', function(data)
-    -- NUEVO INPUT
     local input = lib.inputDialog(Lang:t('lang_34'), {
         { 
             type = 'number',
@@ -586,7 +583,7 @@ RegisterNetEvent('rsg-houses:client:removecredit', function(data)
             default = 50,
         },
     }, {
-        allowCancel = true,  -- Permitir que el usuario cancele el diálogo
+        allowCancel = true,
     })
 
     if input then
@@ -619,7 +616,6 @@ RegisterNetEvent('rsg-houses:client:guestmenu', function(data)
         end
 
         if housecitizenid == playercitizenid then
-            -- NUEVO MENU
             lib.registerContext(
             {   id = 'house_addguest_menu',
                 title = Lang:t('lang_38')..houseid,
@@ -685,7 +681,7 @@ RegisterNetEvent('rsg-houses:client:removeguest', function(data)
             if houseid == data.houseid then
                 local content = { 
                     value = citizenid,
-                    label = citizenid } -- You can customize the label as needed
+                    label = citizenid }
                 option[#option + 1] = content
             end
         end

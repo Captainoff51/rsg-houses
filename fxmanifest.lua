@@ -4,7 +4,7 @@ game 'rdr3'
 lua54 'yes'
 
 author 'RexShack#3041'
-description 'rsg-houses version Sadicius#1150'
+description 'rsg-houses'
 
 client_scripts
 {
@@ -28,8 +28,6 @@ dependencies
 {
     'ox_lib',
     'rsg-core',
-    --'rsg-menu',
-    --'rsg-input',
     'rsg-npcs',
     'rsg-bossmenu'
     
