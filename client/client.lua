@@ -1,5 +1,4 @@
 local RSGCore = exports['rsg-core']:GetCoreObject()
-
 local doorLockPrompt = GetRandomIntInRange(0, 0xffffff)
 local lockPrompt = nil
 local DoorID = nil
@@ -13,9 +12,7 @@ local createdEntries = {}
 local doorLists = {}
 local currenthouseshop = nil
 
---[[ Functions: Start ]]--
-
--- Door Lock / Unlock Animation
+-- door lock / unlock animation
 local UnlockAnimation = function()
     local ped = PlayerPedId()
     local boneIndex = GetEntityBoneIndexByName(ped, "SKEL_R_Finger12")
@@ -42,6 +39,7 @@ local UnlockAnimation = function()
     DeleteObject(prop)
 end
 
+-- door prompt
 local DoorLockPrompt = function()
     local str = 'Use'
     local stra = CreateVarString(10, 'LITERAL_STRING', str)
@@ -59,11 +57,7 @@ local DoorLockPrompt = function()
     createdEntries[#createdEntries + 1] = {type = "nPROMPT", handle = doorLockPrompt}
 end
 
---[[ Functions: Start ]]--
-
-
---[[ Threads: Start ]]--
--- Real Estate Agent Prompts
+-- real estate agent prompts
  CreateThread(function()
     for i = 1, #Config.EstateAgents do
         local agent = Config.EstateAgents[i]
@@ -88,7 +82,7 @@ end
     end
 end)
 
--- House Blips
+-- house blips
 AddEventHandler('rsg-houses:client:CheckBlip', function()
     RSGCore.Functions.TriggerCallback('rsg-houses:server:GetOwnedHouseInfo', function(result)
         local houseid = result[1].houseid
@@ -122,7 +116,7 @@ AddEventHandler('rsg-houses:client:CheckBlip', function()
     end
 end)
 
--- Check Owned House Blip on Spawn
+-- check owned house blip on spawn
 RegisterNetEvent('rsg-houses:client:BlipsOnSpawn')
 AddEventHandler('rsg-houses:client:BlipsOnSpawn', function(blip)
     if blip and blip > 0 then
@@ -138,7 +132,7 @@ AddEventHandler('rsg-houses:client:BlipsOnSpawn', function(blip)
     end)
 end)
 
--- Get Owned House Blip
+-- get owned house blip
 AddEventHandler('rsg-houses:client:BlipLoop', function()
     blipchecked = false
 
@@ -151,7 +145,7 @@ AddEventHandler('rsg-houses:client:BlipLoop', function()
     end)
 end)
 
--- Get Door State from Database and Set
+-- get door state from database and set
 CreateThread(function()
     while true do
         checked = false
@@ -168,7 +162,7 @@ CreateThread(function()
     end
 end)
 
--- Get Specific Door State from Database
+-- get specific door state from database
 CreateThread(function()
     local ped = PlayerPedId()
     DoorLockPrompt()
@@ -210,7 +204,7 @@ CreateThread(function()
     end
 end)
 
--- House Menu Prompt
+-- house menu prompt
 CreateThread(function()
     for i = 1, #Config.Houses do
         local house = Config.Houses[i]
@@ -226,11 +220,7 @@ CreateThread(function()
     end
 end)
 
---[[ Threads: End ]]--
-
---[[ Events: Start ]]--
-
--- Real Estate Agent Menu
+-- get door state
 RegisterNetEvent('rsg-houses:client:GetSpecificDoorState', function(id, state)
     DoorID = id
     local doorstate = state
@@ -242,6 +232,7 @@ RegisterNetEvent('rsg-houses:client:GetSpecificDoorState', function(id, state)
     end
 end)
 
+-- real estate agent menu
 RegisterNetEvent('rsg-houses:client:agentmenu', function(location)
     lib.registerContext({
         id = "estate_agent_menu",
@@ -278,7 +269,7 @@ RegisterNetEvent('rsg-houses:client:agentmenu', function(location)
     lib.showContext("estate_agent_menu")
 end)
 
--- Buy House Menu
+-- buy house menu
 RegisterNetEvent('rsg-houses:client:buymenu', function(data)
     local houseContextOptions = {
         {
@@ -322,7 +313,7 @@ RegisterNetEvent('rsg-houses:client:buymenu', function(data)
     end)
 end)
 
--- Sell House Menu
+-- sell house menu
 RegisterNetEvent('rsg-houses:client:sellmenu', function(data)
     local sellContextOptions = {
         {
@@ -366,7 +357,7 @@ RegisterNetEvent('rsg-houses:client:sellmenu', function(data)
     end)
 end)
 
--- Lock / Unlock Door
+-- lock / unlock door
 RegisterNetEvent('rsg-houses:client:toggledoor', function(door, house)
     RSGCore.Functions.TriggerCallback('rsg-houses:server:GetHouseKeys', function(results)
         for i = 1, #results do
@@ -408,7 +399,7 @@ RegisterNetEvent('rsg-houses:client:toggledoor', function(door, house)
     end)
 end)
 
--- House Menu
+-- house menu
 RegisterNetEvent('rsg-houses:client:housemenu', function(houseid)
     RSGCore.Functions.TriggerCallback('rsg-houses:server:GetHouseKeys', function(results)
         for i = 1, #results do
@@ -481,7 +472,7 @@ RegisterNetEvent('rsg-houses:client:housemenu', function(houseid)
     end)
 end)
 
--- House Credit Menu
+-- house credit menu
 RegisterNetEvent('rsg-houses:client:creditmenu', function(data)
     RSGCore.Functions.TriggerCallback('rsg-houses:server:GetOwnedHouseInfo', function(result)
         local housecitizenid = result[1].citizenid
@@ -568,11 +559,12 @@ RegisterNetEvent('rsg-houses:client:addcredit', function(data)
         TriggerServerEvent('rsg-houses:server:addcredit', newcredit, amount, data.houseid)
     else
         if Config.Debug == true then
-            print("Se canceló el diálogo de entrada.")
+            print("input dialog was cancelled")
         end
     end
 end)
 
+-- remove house credit
 RegisterNetEvent('rsg-houses:client:removecredit', function(data)
     local input = lib.inputDialog(Lang:t('lang_34'), {
         { 
@@ -598,12 +590,12 @@ RegisterNetEvent('rsg-houses:client:removecredit', function(data)
         TriggerServerEvent('rsg-houses:server:removecredit', newcredit, amount, data.houseid)
     else
         if Config.Debug == true then
-            print("Se canceló el diálogo de entrada.")
+            print("input dialog was cancelled")
         end
     end
 end)
 
--- Guest Menu
+-- guest menu
 RegisterNetEvent('rsg-houses:client:guestmenu', function(data)
     RSGCore.Functions.TriggerCallback('rsg-houses:server:GetOwnedHouseInfo', function(result)
         local housecitizenid = result[1].citizenid
@@ -709,25 +701,25 @@ RegisterNetEvent('rsg-houses:client:removeguest', function(data)
     end)
 end)
 
--- House Storage
+-- house storage
 RegisterNetEvent('rsg-houses:client:storage', function(data)
     local house = data.house
 
     TriggerServerEvent("inventory:server:OpenInventory", "stash", data.house,
-    {   maxweight = Config.StorageMaxWeight,
+    {   
+        maxweight = Config.StorageMaxWeight,
         slots = Config.StorageMaxSlots,
     })
 
     TriggerEvent("inventory:client:SetCurrentStash", house)
 end)
 
---[[ Threads: End ]]--
-
---[[ Resource Cleanup ]]--
+-- update door state on restart
 AddEventHandler('onResourceStart', function(resource)
     TriggerServerEvent('rsg-houses:server:UpdateDoorStateRestart')
 end)
 
+-- cleanup system
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() then return end
 

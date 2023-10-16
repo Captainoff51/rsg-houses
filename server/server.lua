@@ -93,10 +93,10 @@ RegisterServerEvent('rsg-houses:server:buyhouse', function(data)
         return
     end
 
-    --if (Player.PlayerData.money.cash < data.price) then
-    --    RSGCore.Functions.Notify(src, 'You don\'t have enough cash!', 'error')
-    --    return
-    --end
+    if (Player.PlayerData.money.cash < data.price) then
+        RSGCore.Functions.Notify(src, 'You don\'t have enough cash!', 'error')
+        return
+    end
 
     MySQL.update('UPDATE player_houses SET citizenid = ?, fullname = ?, owned = ?, credit = ? WHERE houseid = ?',
     {   citizenid,
@@ -111,7 +111,7 @@ RegisterServerEvent('rsg-houses:server:buyhouse', function(data)
         ['@houseid']    = data.house
     })
 
-    Player.Functions.RemoveItem('cash', data.price)
+    Player.Functions.RemoveMoney('cash', data.price)
     RSGCore.Functions.Notify(src, Lang:t('lang_53'), 'success')
     TriggerClientEvent('rsg-houses:client:BlipsOnSpawn', src, data.blip)
 end)
@@ -123,7 +123,7 @@ RegisterServerEvent('rsg-houses:server:sellhouse', function(data)
 
     MySQL.update('UPDATE player_houses SET citizenid = 0, fullname = 0, credit = 0, owned = 0 WHERE houseid = ?', {data.house})
     MySQL.update('DELETE FROM player_housekeys WHERE houseid = ?', {data.house})
-    Player.Functions.AddItem('cash', data.price)
+    Player.Functions.AddMoney('cash', data.price, "house-sale")
     RSGCore.Functions.Notify(src, Lang:t('lang_54'), 'success')
     TriggerClientEvent('rsg-houses:client:BlipsOnSpawn', src, data.blip)
 end)
@@ -206,13 +206,13 @@ RegisterNetEvent('rsg-houses:server:GetSpecificDoorState', function(door)
 end)
 
 -- update door state
---[[ RegisterNetEvent('rsg-houses:server:UpdateDoorState', function(doorid, doorstate)
+RegisterNetEvent('rsg-houses:server:UpdateDoorState', function(doorid, doorstate)
     local src = source
 
     MySQL.update('UPDATE doors SET doorstate = ? WHERE doorid = ?', {doorstate, doorid})
 
     TriggerClientEvent('rsg-houses:client:GetSpecificDoorState', src, doorid, doorstate)
-end) ]]
+end)
 
 RegisterNetEvent('rsg-houses:server:UpdateDoorStateRestart', function()
     local result = MySQL.query.await('SELECT * FROM doors WHERE doorstate=@doorstate', {['@doorstate'] = 1})
