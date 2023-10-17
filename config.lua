@@ -934,8 +934,8 @@ Config.HouseDoors =
         doorcoords = vector3(-2590.8410644531,457.83801269531,146.01396179199)
     },
     {
-        houseid         = 'house44',
-        name            = 'House 44',
+        houseid         = 'house46',
+        name            = 'House 46',
         doorid          = 2395304827,
         doorcoords = vector3(-2597.7019042969,457.83837890625,146.01396179199)
     },
