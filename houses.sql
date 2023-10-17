@@ -55,7 +55,8 @@ INSERT INTO `player_houses` (`id`, `agent`, `houseid`, `citizenid`, `owned`, `pr
 (42, 'ambarino', 'house42', '0', 0, 2500, 0),
 (43, 'newaustin', 'house43', '0', 0, 2500, 0),
 (44, 'newhanover', 'house44', '0', 0, 3000, 0),
-(45, 'lemoyne', 'house45', '0', 0, 10000, 0);
+(45, 'lemoyne', 'house45', '0', 0, 10000, 0),
+(46, 'westelizabeth', 'house46', '0', 0, 2000, 0);
 
 CREATE TABLE IF NOT EXISTS `player_housekeys` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -148,4 +149,6 @@ INSERT INTO `doors` (`doorid`, `doorstate`) VALUES
 ('3045682143', 1),
 ('1915887592', 1),
 ('3324299212', 1),
-('1180868565', 1);
+('1180868565', 1),
+('1535511805', 1),
+('2395304827', 1);

@@ -416,6 +416,14 @@ Config.Houses =
         menucoords      = vector3(2712.8942, -1288.714, 60.344982),
         blipcoords      = vector3(2711.4370117188,-1293.0838623047,59.458484649658),
         showblip        = true
+    },
+    {    -- house46
+        name            = 'House46',
+        houseid         = 'house46',
+        houseprompt     = 'houseprompt46',
+        menucoords      = vector3(-2593.626, 461.16262, 146.99726),
+        blipcoords      = vector3(-2597.7019042969,457.83837890625,146.01396179199),
+        showblip        = true
     }
 }
 
@@ -917,5 +925,19 @@ Config.HouseDoors =
         name            = 'House 45',
         doorid          = 1180868565,
         doorcoords = vector3(2711.4370117188,-1293.0838623047,59.458484649658)
-    }
+    },
+    ---------------------------------------------------------------------------
+    {
+        houseid         = 'house46',
+        name            = 'House 46',
+        doorid          = 1535511805,
+        doorcoords = vector3(-2590.8410644531,457.83801269531,146.01396179199)
+    },
+    {
+        houseid         = 'house44',
+        name            = 'House 44',
+        doorid          = 2395304827,
+        doorcoords = vector3(-2597.7019042969,457.83837890625,146.01396179199)
+    },
+    ---------------------------------------------------------------------------
 }
