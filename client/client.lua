@@ -260,8 +260,7 @@ RegisterNetEvent('rsg-houses:client:agentmenu', function(location)
                     title = Lang:t('lang_8'),
                     description = Lang:t('lang_9'),
                     icon = 'fa-solid fa-sack-dollar',
-                    event = 'rsg-houses:client:houseshopCheckMoney',
-                    args = { },
+                    event = 'rsg-bossmenu:client:mainmenu',
                     arrow = true
                 },
             }
