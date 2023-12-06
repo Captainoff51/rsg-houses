@@ -108,6 +108,7 @@ AddEventHandler('rsg-houses:client:CheckBlip', function()
     end
 end)
 
+-- show all house blips when Config.OwnedHouseBlips is set to false
 Citizen.CreateThread(function()
     for _, v in pairs(Config.Houses) do
         if not Config.OwnedHouseBlips and v.showblip then
