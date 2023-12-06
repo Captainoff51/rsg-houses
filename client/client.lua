@@ -82,7 +82,7 @@ end
     end
 end)
 
--- house blips
+-- owned house blips
 AddEventHandler('rsg-houses:client:CheckBlip', function()
     RSGCore.Functions.TriggerCallback('rsg-houses:server:GetOwnedHouseInfo', function(result)
         local houseid = result[1].houseid
@@ -102,15 +102,19 @@ AddEventHandler('rsg-houses:client:CheckBlip', function()
             SetBlipScale(HouseBlip, 0.1)
             Citizen.InvokeNative(0x9CB1A1623062F402, HouseBlip, Lang:t('lang_1'))
             createdEntries[#createdEntries + 1] = {type = "BLIP", handle = HouseBlip}
-
             break
         end
 
-        if not Config.OwnedHouseBlips and house.showblip then
-            HouseBlip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, house.blipcoords)
+    end
+end)
+
+Citizen.CreateThread(function()
+    for _, v in pairs(Config.Houses) do
+        if not Config.OwnedHouseBlips and v.showblip then
+            HouseBlip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, v.blipcoords)
             SetBlipSprite(HouseBlip, `blip_proc_home`, true)
             SetBlipScale(HouseBlip, 0.1)
-            Citizen.InvokeNative(0x9CB1A1623062F402, HouseBlip, house.name)
+            Citizen.InvokeNative(0x9CB1A1623062F402, HouseBlip, v.name)
             createdEntries[#createdEntries + 1] = {type = "BLIP", handle = HouseBlip}
         end
     end
