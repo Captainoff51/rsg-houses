@@ -86,7 +86,10 @@ local Translations = {
 
 -- Lang:t('lang_0')
 
-Lang = Locale:new({
-    phrases = Translations,
-    warnOnMissing = true
-})
+if GetConvar('rsg_locale', 'en') == 'nl' then
+    Lang = Locale:new({
+        phrases = Translations,
+        warnOnMissing = true,
+        fallbackLang = Lang,
+    })
+end
