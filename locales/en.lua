@@ -1,86 +1,96 @@
 local Translations = {
     --client
-lang_0 = 'Open House Day, talk to ',
-lang_1 = 'Home Sweet Home',
-lang_2 = 'Owners Menu',
-lang_3 = 'Estate Agent',
-lang_4 = 'Buy a Property',
-lang_5 = 'Open House Day, which one do you like?',
-lang_6 = 'Sell a Property',
-lang_7 = 'Not interested anymore, shall I buy it from you?',
-lang_8 = 'View Property Tax',
-lang_9 = 'Check and withdraw money from properties',
--- buymenu
-lang_10 = 'Buy House',
-lang_11 = 'Price $',
-lang_12 = ' : Land Tax $',
--- sellmenu
-lang_13 = 'Sell House',
-lang_14 = 'Sell Price $',
-    
-lang_15 = 'Locked!',
+	client = {
+		open_house_day = 'Open House Day, talk to ',
+		home_sweet_home = 'Home Sweet Home',
+		owners_menu = 'Owners Menu',
+		estate_agent = 'Estate Agent',
+		buy_property = 'Buy a Property',
+		buy_property_desc = 'Open House Day, which one do you like?',
+		sell_property = 'Sell a Property',
+		sell_property_desc = 'Not interested anymore, shall I buy it from you?',
+		view_property_tax = 'View Property Tax',
+		money_from_properties = 'Check and withdraw money from properties',
+	},
+	
+	-- buymenu
+	buymenu = {
+		buy_house = 'Buy House',
+		buy_price = 'Price $',
+		tax = ' : Land Tax $',
+	},
+	
+	-- sellmenu
+	sellmenu = {
+		sell_house = 'Sell House',
+		sell_price = 'Sell Price $',
+			
+		locked = 'Locked!',
+	},
+	
+	--housemenu
+	housemenu = {
+		owner = 'Owner of ',
+		wardrobe = 'Wardrobe',
+		custom_wardrobe = 'Your custom wardrobe',
+		storage = 'Storage',
+		safe_and_organized = 'A safe and organized space', 
+		house_guests = 'House Guests',
+		access_control = 'Total control over who has access',
+		property_tax = 'Property Tax',
+		financial_contribution = 'Financial contribution to maintain your property',
+		guest_in = 'Guest in',
 
---housemenu
-lang_16 = 'Owner of ',
-lang_17 = 'Wardrobe',
-lang_18 = 'Your custom wardrobe',
-lang_19 = 'Storage',
-lang_20 = 'A safe and organized space',
-lang_21 = 'House Guests',
-lang_22 = 'Total control over who has access',
-lang_23 = 'Property Tax',
-lang_24 = 'Financial contribution to maintain your property',
-lang_25 = 'Guest in',
+		property = 'Property ',
+		add_guests = 'Add Guests',
+		add_guests_desc = '',
+		remove_guests = 'Remove Guests',
+		remove_guests_desc = '',
+		
+		-- addguest
+		add_house_guest = 'Add House Guest',
+		add = 'Add',
+		citizen_id = 'Citizen ID',
+		
+		-- removeguest
+		remove_house_guest = 'Remove Guest',
+		remove_error = '',
+		quit = 'Close',
 
---creditmenu
-lang_26 = 'You are not the owner of this house!',
-lang_27 = 'Property Credit',
-lang_28 = 'Current Credit: $',
-lang_29 = 'Status of your current property credit',
-lang_30 = 'Add Credit',
-lang_31 = 'Ensure you can stay in perfect condition',
-lang_32 = 'Withdraw Credit',
-lang_33 = 'Withdraw money for a sale',
+		stash = 'stash',
+	},
+	
+	--creditmenu
+	credit = {
+		non_owner = 'You are not the owner of this house!',
+		property_credit = 'Property Credit',
+		current_credit = 'Current Credit: $',
+		current_property_credit = 'Status of your current property credit',
+		add_credit = 'Add Credit',
+		add_credit_desc = 'Ensure you can stay in perfect condition',
+		withdraw_credit = 'Withdraw Credit',
+		withdraw_credit_desc = 'Withdraw money for a sale',
 
-lang_34 = 'Property Credit',
-lang_35 = 'Amount',
-lang_36 = 'Add an amount to add:',
-lang_37 = 'Add an amount to withdraw:',
-
-lang_38 = 'Property ',
-lang_39 = 'Add Guests',
-lang_40 = '',
-lang_41 = 'Remove Guests',
-lang_42 = '',
--- addguest
-lang_43 = 'Add House Guest',
-lang_44 = 'Add',
-lang_45 = 'Citizen ID',
--- new addguest
---lang_44 = 'Name',
---lang_45 = 'Add the Name:',
---lang_46 = 'Citizen ID',
---lang_47 = 'Add the Citizen ID:',
-
--- removeguest
-lang_48 = 'Remove Guest',
-lang_49 = '',
-lang_50 = 'Close',
-
-lang_51 = 'stash',
-
---server
-lang_52 = 'You already have a house!',
-lang_53 = 'House purchased!',
-lang_54 = 'House sold!',
-lang_55 = 'You have added Property Tax of ',
-lang_56 = 'Your property credit is now $',
-lang_57 = 'You dont have enough money!',
-lang_58 = 'You cannot withdraw more credit than you have!',
-lang_59 = 'You have withdrawn money from Property Tax of ',
-lang_60 = 'The target person already has a key to another house!',
-lang_61 = ' added as a Guest in your house!',
-lang_62 = ' removed from your house\'s Guest list!'
+		lang_34 = 'Property Credit',
+		amount = 'Amount',
+		amount_add_desc = 'Add an amount to add:',
+		amount_withdraw_desc = 'Add an amount to withdraw:',
+	},
+	
+	--server
+	server = {
+		u_already_have = 'You already have a house!',
+		purchased = 'House purchased!',
+		sold = 'House sold!',
+		added_property_tax = 'You have added Property Tax of ',
+		property_credit_now = 'Your property credit is now $',
+		not_enough_money = 'You dont have enough money!',
+		cannot_withdraw = 'You cannot withdraw more credit than you have!',
+		withdrawn_property_tax = 'You have withdrawn money from Property Tax of ',
+		target_person_has_key = 'The target person already has a key to another house!',
+		added_guest = ' added as a Guest in your house!',
+		removed_guest = ' removed from your house\'s Guest list!',
+	},
 }
 
 -- Lang:t('lang_0')

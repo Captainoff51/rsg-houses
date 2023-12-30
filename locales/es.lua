@@ -1,61 +1,56 @@
 local Translations = {
     --client
-        lang_0 = 'Dia de puertas abiertas, habla con ',
-        lang_1 =  'Hogar dulce hogar',
-        lang_2 = 'Menu de Propietario',
-        lang_3 =  'Agente inmobiliario',
-        lang_4 = 'Compra una Propiedad',
-        lang_5 = 'Día de puertas abiertas, cual te gusta?',
-        lang_6 = 'Vende una Propiedad',
-        lang_7 = 'Ya no te interesa, te la compro?',
-        lang_8 = 'Ver Contribucion territorial',
-        lang_9 = 'verificar y retirar el dinero de las propiedades',
-        -- antiguo buymenu
-        lang_10 = 'Comprar Casa',
-        lang_11 = 'Precio: $',
-        lang_12 = ' | Contribucion territorial: $',
-
-        lang_13 = 'Vender casa',
-        lang_14 = 'Precio de venta $',
-
-        lang_15 = '¡Bloqueado!',
-    
-        --housemenu
-        lang_16 = 'Propietario de ',
-        lang_17 = 'Armario',
-        lang_18 = 'Tu propio armario personalizado',
-        lang_19 = 'Almacen',
-        lang_20 = 'Un espacio seguro y organizado',
-        lang_21 = 'Invitados de la casa',
-        lang_22 = 'Control total sobre quien tiene acceso',
-        lang_23 = 'Contribución territorial',
-        lang_24 = 'Un aporte financiero para mantener tu propiedad',
-        lang_25 = 'Invitado en',
-       
-        --creditmenu
-        lang_26 = '¡No eres el dueño de esta casa!',
-        lang_27 = 'Crédito Territorial',
-        lang_28 = 'Crédito actual: $',
-        lang_29 = 'Estado de tu credito territorial actual',
-        lang_30 = 'Añadir Credito',
-        lang_31 = 'Garantiza que puedas seguir en perfecto estado',
-        lang_32 = 'Quitar Credito',
-        lang_33 = 'Retira el dinero, para una venta',
-    
-        lang_34 = 'Credito para propiedad',
-        lang_35 = 'Importe',
-        lang_36 = 'Añade una cantidad para añadir:',
-        lang_37 = 'Añade una cantidad para retirar:',
-        
-        lang_38 = 'Propiedad ',
-        lang_39 = 'Añadir Invitados',
-        lang_40 = '',
-        lang_41 = 'Eliminar Invitados',
-        lang_42 = '',
+	client = {
+        open_house_dayopen_house_day = 'Dia de puertas abiertas, habla con ',
+        home_sweet_home =  'Hogar dulce hogar',
+        owners_menu = 'Menu de Propietario',
+        estate_agent =  'Agente inmobiliario',
+        buy_property = 'Compra una Propiedad',
+        buy_property_desc = 'Día de puertas abiertas, cual te gusta?',
+        sell_property = 'Vende una Propiedad',
+        sell_property_desc = 'Ya no te interesa, te la compro?',
+        view_property_tax = 'Ver Contribucion territorial',
+        money_from_properties = 'verificar y retirar el dinero de las propiedades',
+	},
+	
+	-- antiguo buymenu
+	buymenu = {
+        buy_house = 'Comprar Casa',
+        buy_price = 'Precio: $',
+        tax = ' | Contribucion territorial: $',
+	},
+	
+	-- sellmenu
+	sellmenu = {
+        sell_house = 'Vender casa',
+        sell_price = 'Precio de venta $',
+		
+        locked = '¡Bloqueado!',
+	},
+	
+	--housemenu
+	housemenu = {
+        owner = 'Propietario de ',
+        wardrobe = 'Armario',
+        custom_wardrobe = 'Tu propio armario personalizado',
+        storage = 'Almacen',
+        safe_and_organized = 'Un espacio seguro y organizado',
+        house_guests = 'Invitados de la casa',
+        access_control = 'Control total sobre quien tiene acceso',
+        property_tax = 'Contribución territorial',
+        financial_contribution = 'Un aporte financiero para mantener tu propiedad',
+        guest_in = 'Invitado en',
+		
+        property = 'Propiedad ',
+        add_guests = 'Añadir Invitados',
+        add_guests_desc = '',
+        remove_guests = 'Eliminar Invitados',
+        remove_guests_desc = '',
+		
         -- addguest
-        lang_43 = 'Agregar invitado a la casa',
-        lang_44 = "Agregar",
-        lang_45 = 'Identificación del citizenid',
+        add_house_guest = 'Agregar invitado a la casa',
+        add = "Agregar",
+        citizen_id = 'Identificación del citizenid',
         
         --lang_44 = 'Nombre',
         --lang_45 = 'Agrega el nombre:',
@@ -63,25 +58,43 @@ local Translations = {
         --lang_47 = 'Agrega la identificación del ciudadano:',
     
         -- removeguest
-        lang_48 = 'Eliminar invitado',
-        lang_49 = '',
-        lang_50 = 'Cerrar',
+        remove_house_guest = 'Eliminar invitado',
+        remove_error = '',
+        quit = 'Cerrar',
 
-        lang_51 = "escondite",
+        stash = "escondite",
+	
+	--creditmenu
+	credit = {
+        non_owner = '¡No eres el dueño de esta casa!',
+        property_credit = 'Crédito Territorial',
+        current_credit = 'Crédito actual: $',
+        current_property_credit = 'Estado de tu credito territorial actual',
+        add_credit = 'Añadir Credito',
+        add_credit_desc = 'Garantiza que puedas seguir en perfecto estado',
+        withdraw_credit = 'Quitar Credito',
+        withdraw_credit_desc = 'Retira el dinero, para una venta',
     
-        --server
-        lang_52 = '¡Ya tienes una casa!',
-        lang_53 = '¡Casa comprada!',
-        lang_54 = '¡Casa vendida!',
-        lang_55 = 'Has añadido la Contribución territorial de ',
-        lang_56 = 'Tu crédito sobre la propiedad es ahora $',
-        lang_57 = 'No tienes suficiente dinero!',
-        lang_58 = 'No puedes retirar más crédito del que tienes!',
-        lang_59 = 'Has retirado dinero de la Contribución territorial de ',
-        lang_60 = '¡La persona objetivo ya tiene una llave de otra casa!',
-        lang_61 = ' agregado como invitado en tu casa!',
-        lang_62 = ' eliminado de la lista de invitados de tu casa!'
-
+        lang_34 = 'Credito para propiedad',
+        amount = 'Importe',
+        amount_add_desc = 'Añade una cantidad para añadir:',
+        amount_withdraw_desc = 'Añade una cantidad para retirar:',
+	},
+	
+	--server
+	server = {
+        u_already_have = '¡Ya tienes una casa!',
+        purchased = '¡Casa comprada!',
+        sold = '¡Casa vendida!',
+        added_property_tax = 'Has añadido la Contribución territorial de ',
+        property_credit_now = 'Tu crédito sobre la propiedad es ahora $',
+        not_enough_money = 'No tienes suficiente dinero!',
+        cannot_withdraw = 'No puedes retirar más crédito del que tienes!',
+        withdrawn_property_tax = 'Has retirado dinero de la Contribución territorial de ',
+        target_person_has_key = '¡La persona objetivo ya tiene una llave de otra casa!',
+        added_guest = ' agregado como invitado en tu casa!',
+        removed_guest = ' eliminado de la lista de invitados de tu casa!'
+	},
 }
 
 -- Lang:t('lang_0')
