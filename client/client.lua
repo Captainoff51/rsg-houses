@@ -416,7 +416,7 @@ RegisterNetEvent('rsg-houses:client:housemenu', function(houseid)
             if citizenid == playercitizenid and houseids == houseid and guest == 0 then
                 lib.registerContext(
                     {   id = 'house_menu',
-                    title = Lang:t('housemenu.owner')..houseid,
+                    title = Lang:t('housemenu.owner')..('\"')..Lang:t(('property.')..houseid))..('\"'),
                     position = 'top-right',
                     options = {
                         {   title = Lang:t('housemenu.wardrobe'),
@@ -453,7 +453,7 @@ RegisterNetEvent('rsg-houses:client:housemenu', function(houseid)
             elseif citizenid == playercitizenid and houseids == houseid and guest == 1 then
                 lib.registerContext(
                 {   id = 'house_guest_menu',
-                    title = Lang:t('housemenu.guest_in')..houseid,
+                    title = Lang:t('housemenu.guest_in')..('\"')..Lang:t(('property.')..houseid))..('\"'),
                     position = 'top-right',
                     options = {
                         {   title = Lang:t('housemenu.wardrobe'),
@@ -614,7 +614,7 @@ RegisterNetEvent('rsg-houses:client:guestmenu', function(data)
         if housecitizenid == playercitizenid then
             lib.registerContext(
             {   id = 'house_addguest_menu',
-                title = Lang:t('housemenu.property')..houseid,
+                title = Lang:t('housemenu.property')..('\"')..Lang:t(('property.')..houseid))..('\"'),
                 menu = "house_menu",
                 position = 'top-right',
                 options = {

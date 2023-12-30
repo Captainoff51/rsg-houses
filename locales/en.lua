@@ -39,7 +39,7 @@ local Translations = {
 		access_control = 'Total control over who has access',
 		property_tax = 'Property Tax',
 		financial_contribution = 'Financial contribution to maintain your property',
-		guest_in = 'Guest in',
+		guest_in = 'Guest in ',
 
 		property = 'Property ',
 		add_guests = 'Add Guests',
