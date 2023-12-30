@@ -293,7 +293,7 @@ RegisterNetEvent('rsg-houses:client:buymenu', function(data)
 
             if agent == data.agentlocation and owned == 0 then
                 houseContextOptions[#houseContextOptions + 1] = {
-                    title = houseid,
+                    title = Lang:t(('property.')..houseid),
                     icon = "fas fa-home",
                     description = Lang:t('buymenu.buy_price')..house.price..Lang:t('buymenu.tax')..Config.LandTaxPerCycle,
                     onSelect = function()
@@ -337,7 +337,7 @@ RegisterNetEvent('rsg-houses:client:sellmenu', function(data)
 
             if agent == data.agentlocation and owned == 1 then
                 sellContextOptions[#sellContextOptions + 1] = {
-                    title = houseid,
+                    title = Lang:t(('property.')..houseid),
                     icon = "fas fa-home",
                     description = Lang:t('sellmenu.sell_price')..sellprice,
                     onSelect = function()

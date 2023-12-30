@@ -1,7 +1,7 @@
 local Translations = {
     --client
 	client = {
-        open_house_dayopen_house_day = 'Dia de puertas abiertas, habla con ',
+        open_house_day = 'Dia de puertas abiertas, habla con ',
         home_sweet_home =  'Hogar dulce hogar',
         owners_menu = 'Menu de Propietario',
         estate_agent =  'Agente inmobiliario',
@@ -69,7 +69,6 @@ local Translations = {
         withdraw_credit = 'Quitar Credito',
         withdraw_credit_desc = 'Retira el dinero, para una venta',
     
-        lang_34 = 'Credito para propiedad',
         amount = 'Importe',
         amount_add_desc = 'Añade una cantidad para añadir:',
         amount_withdraw_desc = 'Añade una cantidad para retirar:',

@@ -1,7 +1,7 @@
 local Translations = {
     --client
 	client = {
-        open_house_dayopen_house_day = 'Open huis, praat met ',
+        open_house_day = 'Open huis, praat met ',
         home_sweet_home = 'Home sweet home',
         owners_menu = 'Eigenaarsmenu',
         estate_agent = 'Makelaar',
@@ -71,7 +71,6 @@ local Translations = {
         withdraw_credit = 'Verwijder Krediet',
         withdraw_credit_desc = 'Haal het geld eruit, voor een verkoop',
     
-        lang_34 = 'Krediet voor eigendom',
         amount = 'Bedrag',
         amount_add_desc = 'Voeg een bedrag toe om toe te voegen:',
         amount_withdraw_desc = 'Voeg een bedrag toe om te verwijderen:',

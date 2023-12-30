@@ -71,7 +71,6 @@ local Translations = {
 		withdraw_credit = 'Withdraw Credit',
 		withdraw_credit_desc = 'Withdraw money for a sale',
 
-		lang_34 = 'Property Credit',
 		amount = 'Amount',
 		amount_add_desc = 'Add an amount to add:',
 		amount_withdraw_desc = 'Add an amount to withdraw:',
