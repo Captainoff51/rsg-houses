@@ -39,7 +39,7 @@ local Translations = {
 		access_control = 'Vollständige Kontrolle darüber, wer Zugang hat',
 		property_tax = 'Immobiliensteuer',
 		financial_contribution = 'Finanzieller Beitrag zum Erhaltung Ihres Eigentums',
-		guest_in = 'Zu Gast bei',
+		guest_in = 'Zu Gast im ',
 		
 		property = 'Immobilie ',
 		add_guests = 'Gäste einladen',
