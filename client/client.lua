@@ -110,7 +110,6 @@ AddEventHandler('rsg-houses:client:CheckBlip', function()
             SetBlipScale(HouseBlip, 0.1)
             Citizen.InvokeNative(0x9CB1A1623062F402, HouseBlip, Lang:t('client.home_sweet_home'))
             createdEntries[#createdEntries + 1] = {type = "BLIP", handle = HouseBlip}
-            break
         end
 
     end
