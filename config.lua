@@ -17,7 +17,7 @@ Config.PurgeStorage     = false -- purge house inventory when the house is taken
 Config.Blip =
 {
     blipName            = Lang:t('client.estate_agent'), -- Config.Blip.blipName
-    blipSprite          = 'blip_robbery_home', -- Config.Blip.blipSprite
+    blipSprite          = 'blip_ambient_quartermaster', -- Config.Blip.blipSprite
     blipScale           = 0.2 -- Config.Blip.blipScale
 }
 
