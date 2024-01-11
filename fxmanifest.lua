@@ -4,7 +4,7 @@ game 'rdr3'
 lua54 'yes'
 
 description 'rsg-houses'
-version '1.0.7'
+version '1.0.8'
 
 client_scripts {
     'client/client.lua'
