@@ -96,28 +96,22 @@ AddEventHandler('rsg-houses:client:CheckBlip', function()
     for i = 1, #Config.Houses do
         local house = Config.Houses[i]
 
-        if Config.OwnedHouseBlips and house.houseid == myhouse then
+        if not Config.OwnedHouseBlips and house.houseid ~= myhouse then
+            HouseBlip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, house.blipcoords)
+            SetBlipSprite(HouseBlip, `blip_robbery_home`, true)
+            SetBlipScale(HouseBlip, 0.1)
+            Citizen.InvokeNative(0x9CB1A1623062F402, HouseBlip, house.name)
+            createdEntries[#createdEntries + 1] = {type = "BLIP", handle = HouseBlip}
+        end
+
+        if house.houseid == myhouse then
             HouseBlip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, house.blipcoords)
             SetBlipSprite(HouseBlip, `blip_proc_home`, true)
             SetBlipScale(HouseBlip, 0.1)
             Citizen.InvokeNative(0x9CB1A1623062F402, HouseBlip, Lang:t('client.home_sweet_home'))
             createdEntries[#createdEntries + 1] = {type = "BLIP", handle = HouseBlip}
-            break
         end
 
-    end
-end)
-
--- show all house blips when Config.OwnedHouseBlips is set to false
-Citizen.CreateThread(function()
-    for _, v in pairs(Config.Houses) do
-        if not Config.OwnedHouseBlips and v.showblip then
-            HouseBlip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, v.blipcoords)
-            SetBlipSprite(HouseBlip, `blip_proc_home`, true)
-            SetBlipScale(HouseBlip, 0.1)
-            Citizen.InvokeNative(0x9CB1A1623062F402, HouseBlip, v.name)
-            createdEntries[#createdEntries + 1] = {type = "BLIP", handle = HouseBlip}
-        end
     end
 end)
 
